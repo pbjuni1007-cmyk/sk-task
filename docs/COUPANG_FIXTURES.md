@@ -1,6 +1,6 @@
 # 쿠팡 모의 API 상품 자료
 
-2026-09-10 사용자 제공 정보로 실제 상품2개를 구성했다. `evidence.json`은 앱이 읽는 검증된 내부 모델이고, `user-provided-products.json`은 판매자와 사용자 확인 출처를 포함한 원본 기록이다.
+2026-09-10 사용자 제공 정보로 실제 상품2개를 구성했다. [evidence.json](../fixtures/coupang/evidence.json)은 앱이 읽는 검증된 내부 모델이고, [user-provided-products.json](../fixtures/coupang/user-provided-products.json)은 판매자와 사용자 확인 출처를 포함한 원본 기록이다.
 
 | 상품 | 일반 구매 가격 | 판매자 | 배송 |
 |---|---:|---|---|
@@ -11,6 +11,6 @@
 
 `verified`는 이 실습에서 사용자 확인 자료가 충족되었다는 뜻이며 독립 웹 조회 검증을 뜻하지 않는다. source_checked_at은 사용자 확인 기록 시각, retrieved_at은 모의 snapshot 구성 시각이다. 가격·배송은 사용자 제공 당시 조건이며 실시간 보장이 아니다. rank는 모의 정렬 순서다.
 
-공식 request-response 필드 구조는 승인된 설계서 기준이다. 내부 배송 메타데이터와 판매자 원본은 wire 응답에 섞지 않는다. 실제 쿠팡 API 호출은 수행하지 않았다. 공식 도움말 본문은 2026-09-10 Chrome에서 v1 검색 API를 열어 [별도 대조](../../docs/COUPANG_API_CONTRACT_CHECK.md)했다.
+공식 request-response 필드 구조는 승인된 설계서 기준이다. 내부 배송 메타데이터와 판매자 원본은 wire 응답에 섞지 않는다. 실제 쿠팡 API 호출은 수행하지 않았다. 공식 도움말 본문은 2026-09-10 Chrome에서 v1 검색 API를 열어 [별도 대조](COUPANG_API_CONTRACT_CHECK.md)했다.
 
 2026-09-10 브라우저 후속 확인: 두 상품 링크가 실제 상품 페이지로 열리고 일반 가격·무료배송을 확인했다. LG 27MS500의 판매자는 쿠팡, 제조사는 LG전자이므로 판매자 표기를 수정했다. 초기 사용자 진술은 `user_reported_seller`, 후속 근거는 `browser_follow_up`에 보존한다. 다른 사양 전체의 독립 검증을 의미하지 않는다.

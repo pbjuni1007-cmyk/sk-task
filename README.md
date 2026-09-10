@@ -14,7 +14,7 @@ python3.12 -m venv .venv
 .venv/bin/python -m streamlit run app.py --server.address 127.0.0.1 --server.port 8501 --browser.gatherUsageStats false
 ```
 
-http://127.0.0.1:8501/ 에서 구매 조건 → 상품 비교·선택 → 문서 확인·제출 순서로 사용한다. 상세한 입력 예시는 [시연 가이드](DEMO_GUIDE.md)를 참고한다.
+http://127.0.0.1:8501/ 에서 구매 조건 → 상품 비교·선택 → 문서 확인·제출 순서로 사용한다. 상세한 입력 예시는 [시연 가이드](docs/DEMO_GUIDE.md)를 참고한다.
 
 프로젝트 `.env`에 `OPENAI_API_KEY`를 설정한다. 선택적으로 `OPENAI_API_KEY_SUB`를 넣으면 기본 키401/403/429 오류 시 보조 키로 전환한다. 전환 후 같은 Agent 세션은 보조 키를 사용하며 실패 시도도 모델6회 예산에 포함한다. 키는 로그·화면에 출력하지 않는다. 모델은 `PURCHASE_MODEL`로 지정하며 기본값은 gpt-4o-mini다.
 
@@ -48,9 +48,11 @@ http://127.0.0.1:8501/ 에서 구매 조건 → 상품 비교·선택 → 문서
 
 ## 범위와 출처
 
-- [상품 자료](fixtures/coupang/README.md): 클라인즈114000원 / LG169000원, 무료·로켓배송은 사용자가 확인한 당시 정보다. 실시간 가격 보장이 아니다.
+- [상품 자료](docs/COUPANG_FIXTURES.md): 클라인즈114000원 / LG169000원, 무료·로켓배송은 사용자가 확인한 당시 정보다. 실시간 가격 보장이 아니다.
 - API 요청/응답 예제: fixtures/coupang/search-request.json, search-response.json. 내부 배송/출처 메타데이터는 evidence.json으로 분리했다.
 - [공식 API 본문 대조](docs/COUPANG_API_CONTRACT_CHECK.md): 2026-09-10 브라우저에서 v1 검색 API 요청·응답 필드, 최대10개·분당50회를 확인했다. 실제 쿠팡 API 인증·호출 검증은 수행하지 않았다.
-- [38개 설계 기준 추적표](tests/traceability.md), [Agent 설계서](docs/AGENT_DESIGN.md).
+- [38개 설계 기준 추적표](docs/TEST_TRACEABILITY.md), [Agent 설계서](docs/AGENT_DESIGN.md).
 
 DB는 runtime/purchase.sqlite3. .env/runtime/.venv는 Git 제외 대상이다. macOS ARM64 이외 환경, 운영 인증 및 해상도별 시각 검증은 별도 범위다.
+
+전체 문서는 [문서 목차](docs/README.md)에서 확인할 수 있다.
