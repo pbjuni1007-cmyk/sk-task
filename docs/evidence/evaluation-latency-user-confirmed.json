@@ -1,0 +1,633 @@
+{
+  "suite": "latency",
+  "data": "user-confirmed catalog; actual model",
+  "python": "3.12.13",
+  "source_hash": "e9bf6c6c1d105d57d8b90ceb3c7a2421f1dcb6667d9cdd9db50acdce55a9283a",
+  "model": "gpt-4o-mini",
+  "runs": 20,
+  "passed": 20,
+  "p50_seconds": 6.2695,
+  "p95_seconds": 6.922,
+  "results": [
+    {
+      "run": 1,
+      "passed": true,
+      "status": "documents_ready",
+      "model_attempts": 6,
+      "tool_attempts": 5,
+      "tokens": 13065,
+      "elapsed_seconds": 7.285,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "passed": true,
+      "status": "documents_ready",
+      "model_attempts": 6,
+      "tool_attempts": 5,
+      "tokens": 13067,
+      "elapsed_seconds": 6.533,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "passed": true,
+      "status": "documents_ready",
+      "model_attempts": 6,
+      "tool_attempts": 5,
+      "tokens": 12964,
+      "elapsed_seconds": 5.99,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "run": 4,
+      "passed": true,
+      "status": "documents_ready",
+      "model_attempts": 6,
+      "tool_attempts": 5,
+      "tokens": 13102,
+      "elapsed_seconds": 6.338,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "run": 5,
+      "passed": true,
+      "status": "documents_ready",
+      "model_attempts": 6,
+      "tool_attempts": 5,
+      "tokens": 13050,
+      "elapsed_seconds": 6.494,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "run": 6,
+      "passed": true,
+      "status": "documents_ready",
+      "model_attempts": 6,
+      "tool_attempts": 5,
+      "tokens": 13187,
+      "elapsed_seconds": 6.828,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "run": 7,
+      "passed": true,
+      "status": "documents_ready",
+      "model_attempts": 6,
+      "tool_attempts": 5,
+      "tokens": 13218,
+      "elapsed_seconds": 6.493,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "run": 8,
+      "passed": true,
+      "status": "documents_ready",
+      "model_attempts": 6,
+      "tool_attempts": 5,
+      "tokens": 12979,
+      "elapsed_seconds": 6.149,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "run": 9,
+      "passed": true,
+      "status": "documents_ready",
+      "model_attempts": 6,
+      "tool_attempts": 5,
+      "tokens": 13139,
+      "elapsed_seconds": 6.032,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "run": 10,
+      "passed": true,
+      "status": "documents_ready",
+      "model_attempts": 6,
+      "tool_attempts": 5,
+      "tokens": 13055,
+      "elapsed_seconds": 6.141,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "run": 11,
+      "passed": true,
+      "status": "documents_ready",
+      "model_attempts": 6,
+      "tool_attempts": 5,
+      "tokens": 13196,
+      "elapsed_seconds": 6.331,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "run": 12,
+      "passed": true,
+      "status": "documents_ready",
+      "model_attempts": 6,
+      "tool_attempts": 5,
+      "tokens": 13013,
+      "elapsed_seconds": 6.062,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "run": 13,
+      "passed": true,
+      "status": "documents_ready",
+      "model_attempts": 6,
+      "tool_attempts": 5,
+      "tokens": 13055,
+      "elapsed_seconds": 6.234,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "run": 14,
+      "passed": true,
+      "status": "documents_ready",
+      "model_attempts": 6,
+      "tool_attempts": 5,
+      "tokens": 12985,
+      "elapsed_seconds": 6.922,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "run": 15,
+      "passed": true,
+      "status": "documents_ready",
+      "model_attempts": 6,
+      "tool_attempts": 5,
+      "tokens": 12998,
+      "elapsed_seconds": 5.921,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "run": 16,
+      "passed": true,
+      "status": "documents_ready",
+      "model_attempts": 6,
+      "tool_attempts": 5,
+      "tokens": 13108,
+      "elapsed_seconds": 6.347,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "run": 17,
+      "passed": true,
+      "status": "documents_ready",
+      "model_attempts": 6,
+      "tool_attempts": 5,
+      "tokens": 12988,
+      "elapsed_seconds": 6.305,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "run": 18,
+      "passed": true,
+      "status": "documents_ready",
+      "model_attempts": 6,
+      "tool_attempts": 5,
+      "tokens": 13146,
+      "elapsed_seconds": 5.767,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "run": 19,
+      "passed": true,
+      "status": "documents_ready",
+      "model_attempts": 6,
+      "tool_attempts": 5,
+      "tokens": 13044,
+      "elapsed_seconds": 5.838,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ]
+    },
+    {
+      "run": 20,
+      "passed": true,
+      "status": "documents_ready",
+      "model_attempts": 6,
+      "tool_attempts": 5,
+      "tokens": 13086,
+      "elapsed_seconds": 6.049,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ]
+    }
+  ]
+}

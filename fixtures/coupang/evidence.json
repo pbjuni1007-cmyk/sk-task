@@ -1,0 +1,72 @@
+[
+  {
+    "evidence_id": "coupang-user-8691064687-92229415852-v1",
+    "product": {
+      "productId": 8691064687,
+      "productName": "클라인즈 제스타 LG IPS사용 27인치 모니터 100Hz C타입 Dex지원 화이트",
+      "productPrice": 114000,
+      "productUrl": "https://www.coupang.com/vp/products/8691064687?itemId=25233252996&vendorItemId=92229415852",
+      "productImage": "https://thumbnail.coupangcdn.com/thumbnails/remote/657x657q90trim/image/vendor_inventory/96c0/346243f466aa3134f5d58fb5710d0c14f2241282be8faff2c4145078bd43.jpg",
+      "isRocket": true,
+      "isFreeShipping": true,
+      "keyword": "모니터",
+      "rank": 1
+    },
+    "supplement": {
+      "product_id": 8691064687,
+      "item_id": "25233252996",
+      "vendor_item_id": "92229415852",
+      "option_label": "69cm · 화이트",
+      "verified_specs": [
+        "27인치",
+        "100Hz",
+        "C타입",
+        "Dex지원",
+        "IPS"
+      ],
+      "shipping_rule": "free",
+      "fee_krw": 0,
+      "tiers": [],
+      "shipping_source_url": "https://www.coupang.com/vp/products/8691064687?itemId=25233252996&vendorItemId=92229415852",
+      "source_checked_at": "2026-09-10T09:31:31.602288Z",
+      "source_status": "verified"
+    },
+    "query": "모니터",
+    "retrieved_at": "2026-09-10T09:31:31.602288Z",
+    "fixture_version": "user-confirmed-2026-09-10-v1",
+    "data_mode": "mock"
+  },
+  {
+    "evidence_id": "coupang-user-8187823028-90445579718-v1",
+    "product": {
+      "productId": 8187823028,
+      "productName": "LG전자 FHD PC 모니터",
+      "productPrice": 169000,
+      "productUrl": "https://www.coupang.com/vp/products/8187823028?itemId=23992760086&vendorItemId=90445579718",
+      "productImage": "https://thumbnail.coupangcdn.com/thumbnails/remote/657x657q90trim/image/retail/images/154197297540354-ca1fa48c-c850-44ea-8014-287ebbc5ddb5.jpg",
+      "isRocket": true,
+      "isFreeShipping": true,
+      "keyword": "모니터",
+      "rank": 2
+    },
+    "supplement": {
+      "product_id": 8187823028,
+      "item_id": "23992760086",
+      "vendor_item_id": "90445579718",
+      "option_label": "27MS500",
+      "verified_specs": [
+        "FHD"
+      ],
+      "shipping_rule": "free",
+      "fee_krw": 0,
+      "tiers": [],
+      "shipping_source_url": "https://www.coupang.com/vp/products/8187823028?itemId=23992760086&vendorItemId=90445579718",
+      "source_checked_at": "2026-09-10T09:31:31.602288Z",
+      "source_status": "verified"
+    },
+    "query": "모니터",
+    "retrieved_at": "2026-09-10T09:31:31.602288Z",
+    "fixture_version": "user-confirmed-2026-09-10-v1",
+    "data_mode": "mock"
+  }
+]

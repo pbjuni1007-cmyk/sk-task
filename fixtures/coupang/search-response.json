@@ -1,0 +1,31 @@
+{
+  "rCode": "0",
+  "rMessage": "",
+  "data": {
+    "landingUrl": "https://www.coupang.com/np/search?q=%EB%AA%A8%EB%8B%88%ED%84%B0",
+    "productData": [
+      {
+        "productId": 8691064687,
+        "productName": "클라인즈 제스타 LG IPS사용 27인치 모니터 100Hz C타입 Dex지원 화이트",
+        "productPrice": 114000,
+        "productUrl": "https://www.coupang.com/vp/products/8691064687?itemId=25233252996&vendorItemId=92229415852",
+        "productImage": "https://thumbnail.coupangcdn.com/thumbnails/remote/657x657q90trim/image/vendor_inventory/96c0/346243f466aa3134f5d58fb5710d0c14f2241282be8faff2c4145078bd43.jpg",
+        "isRocket": true,
+        "isFreeShipping": true,
+        "keyword": "모니터",
+        "rank": 1
+      },
+      {
+        "productId": 8187823028,
+        "productName": "LG전자 FHD PC 모니터",
+        "productPrice": 169000,
+        "productUrl": "https://www.coupang.com/vp/products/8187823028?itemId=23992760086&vendorItemId=90445579718",
+        "productImage": "https://thumbnail.coupangcdn.com/thumbnails/remote/657x657q90trim/image/retail/images/154197297540354-ca1fa48c-c850-44ea-8014-287ebbc5ddb5.jpg",
+        "isRocket": true,
+        "isFreeShipping": true,
+        "keyword": "모니터",
+        "rank": 2
+      }
+    ]
+  }
+}
