@@ -32,7 +32,7 @@
       "itemId": "23992760086",
       "vendorItemId": "90445579718",
       "productName": "LG전자 FHD PC 모니터",
-      "seller": "LG전자",
+      "seller": "쿠팡",
       "option_label": "27MS500",
       "productPrice": 169000,
       "price_basis": "일반할인가; 와우쿠폰할인가159410원 제외",
@@ -44,8 +44,22 @@
       ],
       "missing_fields": [],
       "productImage": "https://thumbnail.coupangcdn.com/thumbnails/remote/657x657q90trim/image/retail/images/154197297540354-ca1fa48c-c850-44ea-8014-287ebbc5ddb5.jpg",
-      "isRocket": true
+      "isRocket": true,
+      "user_reported_seller": "LG전자",
+      "manufacturer": "LG전자"
     }
   ],
-  "confirmation_recorded_at": "2026-09-10T09:31:31.602288+00:00"
+  "confirmation_recorded_at": "2026-09-10T09:31:31.602288+00:00",
+  "browser_follow_up": {
+    "checked_at": "2026-09-10T11:40:26+00:00",
+    "source_url": "https://www.coupang.com/vp/products/8187823028?itemId=23992760086&vendorItemId=90445579718",
+    "verified_fields": {
+      "seller": "쿠팡",
+      "manufacturer": "LG전자",
+      "productPrice": 169000,
+      "option_label": "27MS500",
+      "isFreeShipping": true
+    },
+    "note": "Chrome에서 실제 상품 페이지를 열어 판매자 정보와 제조자 표기를 구분했다. 초기 사용자 제공 판매자 값은 user_reported_seller에 보존한다. 실시간 API 연동 검증은 아니다."
+  }
 }

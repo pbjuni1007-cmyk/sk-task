@@ -42,7 +42,7 @@ http://127.0.0.1:8501/ 에서 구매 조건 → 상품 비교·선택 → 문서
 
 전체114개 오프라인 테스트 통과. socket 접속을 차단한 테스트이며 실제 모델 품질과 구분한다. 의존성 충돌 없음, 사용자 확인 상품2개 검사 통과.
 
-사용자 확인 상품 + 실제 gpt-4o-mini: 정상10/10, 성능20/20 성공. p50 6.2695초 / p95 6.922초. docs/evidence/evaluation-acceptance-user-confirmed.json 및 docs/evidence/evaluation-latency-user-confirmed.json에 모델·Python·소스해시·호출·토큰·지연을 기록한다. 마지막 검색-only/표시정렬 보강 전 측정이며 해당 수정 후 전체 성능 재측정은 하지 않았다. 수정본 여러 턴 검색·선택·수량 변경·제출 취소 스모크는 통과했다.
+사용자 확인 상품 + 실제 gpt-4o-mini 정상10/10 검증에 더해, 2026-09-10 Chrome에서 새 Agent·독립 DB로 문서 생성20회를 다시 실행해20/20 성공했다. Agent 처리 시간 p50 6.602초 / p95 7.197초, 최대8.402초다. [브라우저 검증 보고서](docs/BROWSER_QA_REPORT.md)와 [측정 원본](docs/evidence/evaluation-browser-latency.json)에 실행 방식·범위·관찰 결과를 기록했다. 38개 설계 시나리오는 일반 화면14개·주입 화면20개·QA 콘솔4개로 구분했다. 브라우저 다운로드 저장 완료는 도구 보안 정책으로 미확인이다.
 
 기본 키429 모의 오류→실제 보조 키 응답도 확인했다. 실제 구매/승인 운영 시스템에 연결하지 않았으며 UI 역할은 시연용 프로필이다.
 
@@ -50,7 +50,7 @@ http://127.0.0.1:8501/ 에서 구매 조건 → 상품 비교·선택 → 문서
 
 - [상품 자료](fixtures/coupang/README.md): 클라인즈114000원 / LG169000원, 무료·로켓배송은 사용자가 확인한 당시 정보다. 실시간 가격 보장이 아니다.
 - API 요청/응답 예제: fixtures/coupang/search-request.json, search-response.json. 내부 배송/출처 메타데이터는 evidence.json으로 분리했다.
-- 공식 도움말의 동적 본문 독립 대조는 접근 제한으로 미완료다. 승인된 설계서의 요청/응답 필드 계약을 구현했다. 모의50회/분 제한은 실제 Search API 한도가 아니다.
+- [공식 API 본문 대조](docs/COUPANG_API_CONTRACT_CHECK.md): 2026-09-10 브라우저에서 v1 검색 API 요청·응답 필드, 최대10개·분당50회를 확인했다. 실제 쿠팡 API 인증·호출 검증은 수행하지 않았다.
 - [38개 설계 기준 추적표](tests/traceability.md), [Agent 설계서](docs/AGENT_DESIGN.md).
 
 DB는 runtime/purchase.sqlite3. .env/runtime/.venv는 Git 제외 대상이다. macOS ARM64 이외 환경, 운영 인증 및 해상도별 시각 검증은 별도 범위다.

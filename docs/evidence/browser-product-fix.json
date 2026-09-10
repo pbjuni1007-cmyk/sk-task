@@ -1,0 +1,17 @@
+{
+  "checked_at": "2026-09-10T12:01:11+00:00",
+  "product_id": 8187823028,
+  "product_url": "https://www.coupang.com/vp/products/8187823028?itemId=23992760086&vendorItemId=90445579718",
+  "page_observation": {
+    "seller": "쿠팡",
+    "manufacturer": "엘지전자(주)/엘지전자(주)",
+    "normal_price_krw": 169000,
+    "model": "27MS500",
+    "free_shipping": true
+  },
+  "ui_before": "27MS500 · 판매자 LG전자",
+  "ui_after": "27MS500 · 판매자 쿠팡",
+  "method": "Actual Coupang page read in Chrome; corrected product fixture; production UI rerender and DOM assertion passed",
+  "related_tests_passed": 7,
+  "full_regression_passed": 114
+}

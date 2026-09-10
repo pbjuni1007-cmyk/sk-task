@@ -2,6 +2,8 @@
 
 2026-09-10: pytest 114 passed. 아래 통과/부분은 개별 원래 기준의 충족 범위다. 테스트 수를 설계 38개 전체 합격으로 환산하지 않는다. 사용자 확인 실제 상품과 추가 통합 테스트를 반영했다. 통과 범위와 대기 항목을 구분한다.
 
+추가: [2026-09-10 브라우저 검증](../docs/BROWSER_QA_REPORT.md)에서38개를 일반 화면14개·주입 화면20개·QA 콘솔4개로 대조했다. 아래 표는 기존 자동 테스트 근거이며 실제 화면 검증 방식과 혼동하지 않는다.
+
 | 설계 ID | 입력/목적 | 근거 (tests 기준 node) | 판정 |
 |---|---|---|---|
 | TS-01-C001 | “신입 3명용 모니터, 90만 원” → “A 선택” | `../docs/evidence/evaluation-dialogues.json` | 통과: 실제 모델 검색→클라인즈 선택→3대/4대 문서 생성; 사용자 확인 상품 |
@@ -29,7 +31,7 @@
 | TS-07-C005 | “모니터 후보 비교해줘” | `test_workflow.py::test_purpose_optional_until_submit` | 통과: 서비스 검색·초안 허용 |
 | TS-07-C006 | “제출해줘” | `test_acceptance_remaining.py::test_agent_purpose_missing_blocks_submission` | 통과: missing_fields purpose·제출0건, 목적보완 새버전 별도 회귀 |
 | TS-08-C001 | 반복 검색 요청 | `test_acceptance_remaining.py::test_repeating_model_stops_at_budget` | 통과: 반복모델6회 후 종료, 도구상한 별도 회귀 |
-| TS-08-C002 | 정상 문서 생성 요청 | `../docs/evidence/evaluation-latency-user-confirmed.json` | 통과: 실제 모델20/20, p95 6.922초; 사용자 확인 상품. 마지막 검색전용/표시정렬 수정 전 측정, 이후 대화 스모크 별도 통과 |
+| TS-08-C002 | 정상 문서 생성 요청 | `../docs/evidence/evaluation-browser-latency.json` | 통과: 실제 모델20/20을 Chrome UI에서 재실행, Agent p95 7.197초; 저장 문서 공통 필드도 대조 |
 | TS-09-C001 | 경계값 검토 요청 | `test_workflow.py::test_comparison_threshold` | 통과: 499999/500000 |
 | TS-09-C002 | 구매 담당자 승인 | `test_acceptance_remaining.py::test_exact_additional_approval_boundary` | 통과:999999/1000000 정확한 승인경계 |
 | TS-09-C003 | v1 승인으로 v2 처리 시도 | `test_acceptance_remaining.py::test_approved_version_cannot_authorize_revision` | 통과:승인 후 수정·과거승인 재사용차단 |
@@ -37,8 +39,8 @@
 | TS-09-C005 | 자신의 요청 승인 | `test_acceptance_remaining.py::test_buyer_cannot_approve_own_request` | 통과:담당자 자기승인 거절 |
 | TS-09-C006 | “검토해줘” | `test_acceptance_remaining.py::test_shipping_changes_budget_and_approval` | 통과:배송포함501000·예산초과 제출차단 |
 | TS-09-C007 | 구매 담당자 승인 | `test_acceptance_remaining.py::test_shipping_changes_budget_and_approval` | 통과:개당배송포함1000000·추가승인 |
-| TS-10-C001 | keyword·limit=5 검색 | `test_s0_contracts.py::test_mock_search_limit_and_link_only_do_not_mutate_snapshot` | 부분: 합성 계약 검증, 공식 본문 독립 대조 대기 |
+| TS-10-C001 | keyword·limit=5 검색 | `test_s0_contracts.py::test_mock_search_limit_and_link_only_do_not_mutate_snapshot` | 통과: QA 콘솔 계약 검증 및 공식 v1 검색 API 본문 브라우저 대조; 실제 API 호출은 아님 |
 | TS-10-C002 | 검색 링크 요청 | `test_s0_contracts.py::test_response_modes_and_missing_price` | 통과: link-only 목록 생략 |
 | TS-10-C003 | 잘못된 요청 | `test_s0_contracts.py::test_bad_api_request` | 통과: 입력 스키마 거절 |
 | TS-10-C004 | 후보 검색 | `test_acceptance_remaining.py::test_missing_price_wire_response_stops_agent` | 통과:가격누락→Agent실패·문서없음 |
-| TS-10-C005 | “상품 페이지 보여줘” | `test_acceptance_remaining.py::test_user_catalog_matches_source` | 통과:사용자 확인 상품·옵션·이미지·URL일치; 독립웹확인은 아님 |
+| TS-10-C005 | “상품 페이지 보여줘” | `test_acceptance_remaining.py::test_user_catalog_matches_source` | 통과:실제 상품 페이지·옵션·가격·이미지·URL 브라우저 대조, LG 판매자 쿠팡으로 정정 후 화면 확인 |

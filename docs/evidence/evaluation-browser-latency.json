@@ -1,0 +1,829 @@
+{
+  "date": "2026-09-10",
+  "method": "Chrome browser UI → production chat panel; independent DB and new real Agent per trial; mock shopping API",
+  "git_head": "33ff184bb98f32cc97e79b84f8f5462db2c5c37e",
+  "application_python_sha256": "147f701d92369053812657d7868a8b5f064d9fcecfe8f4fb7f700dc7866b816c",
+  "measurement": "Agent elapsed_seconds shown by the QA observer, not full browser page load time",
+  "model": "gpt-4o-mini",
+  "trials": 20,
+  "successes": 20,
+  "p50_seconds": 6.602,
+  "p95_nearest_rank_seconds": 7.197,
+  "max_seconds": 8.402,
+  "records": [
+    {
+      "case": "live01",
+      "metrics": {
+        "model_attempts": 6,
+        "tool_attempts": 5,
+        "tokens": 11480,
+        "elapsed_seconds": 8.402
+      },
+      "response": {
+        "status": "documents_ready",
+        "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+        "request_id": "c940dba7b2b14344b316578cdaab7bb9",
+        "version": 2,
+        "missing_fields": [],
+        "candidate_ids": [
+          8691064687
+        ],
+        "review_id": "90d2b930af40450fbf17a8da4f60f6c2",
+        "document_bundle_id": "2ad6db87d45f435b936cbf01ade73a7d",
+        "submitted_at": null,
+        "warnings": [
+          "쇼핑 API 모의 데이터"
+        ]
+      },
+      "request_id": "c940dba7b2b14344b316578cdaab7bb9",
+      "version": 2,
+      "documents": [
+        "purchase_request",
+        "comparison",
+        "review"
+      ],
+      "status": "ready",
+      "stored_result_check": {
+        "quantity": 3,
+        "budget_krw": 900000,
+        "total_krw": 342000,
+        "all_document_headers_match": true,
+        "submitted_at": null
+      }
+    },
+    {
+      "case": "live02",
+      "metrics": {
+        "model_attempts": 6,
+        "tool_attempts": 5,
+        "tokens": 13060,
+        "elapsed_seconds": 6.928
+      },
+      "response": {
+        "status": "documents_ready",
+        "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+        "request_id": "3d461cf31322468abdc641de0ee941e9",
+        "version": 2,
+        "missing_fields": [],
+        "candidate_ids": [
+          8691064687,
+          8187823028
+        ],
+        "review_id": "3ade41fb0ec842a9bb29ceeba77ea465",
+        "document_bundle_id": "4a39ffa5c02d4addaa668c258835ff8f",
+        "submitted_at": null,
+        "warnings": [
+          "쇼핑 API 모의 데이터"
+        ]
+      },
+      "request_id": "3d461cf31322468abdc641de0ee941e9",
+      "version": 2,
+      "documents": [
+        "purchase_request",
+        "comparison",
+        "review"
+      ],
+      "status": "ready",
+      "stored_result_check": {
+        "quantity": 3,
+        "budget_krw": 900000,
+        "total_krw": 342000,
+        "all_document_headers_match": true,
+        "submitted_at": null
+      }
+    },
+    {
+      "case": "live03",
+      "metrics": {
+        "model_attempts": 6,
+        "tool_attempts": 5,
+        "tokens": 11501,
+        "elapsed_seconds": 6.517
+      },
+      "response": {
+        "status": "documents_ready",
+        "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+        "request_id": "37314a65381e45c5ba48a8fcbc1d2cfc",
+        "version": 2,
+        "missing_fields": [],
+        "candidate_ids": [
+          8691064687
+        ],
+        "review_id": "87bdcfeb3f374874a79902b971be6262",
+        "document_bundle_id": "edfaa142a2c4486c80006fe65c9721ae",
+        "submitted_at": null,
+        "warnings": [
+          "쇼핑 API 모의 데이터"
+        ]
+      },
+      "request_id": "37314a65381e45c5ba48a8fcbc1d2cfc",
+      "version": 2,
+      "documents": [
+        "purchase_request",
+        "comparison",
+        "review"
+      ],
+      "status": "ready",
+      "stored_result_check": {
+        "quantity": 3,
+        "budget_krw": 900000,
+        "total_krw": 342000,
+        "all_document_headers_match": true,
+        "submitted_at": null
+      }
+    },
+    {
+      "case": "live04",
+      "metrics": {
+        "model_attempts": 6,
+        "tool_attempts": 5,
+        "tokens": 13167,
+        "elapsed_seconds": 7.197
+      },
+      "response": {
+        "status": "documents_ready",
+        "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+        "request_id": "22e9e0f86e934246a684ad0d49df0780",
+        "version": 2,
+        "missing_fields": [],
+        "candidate_ids": [
+          8691064687,
+          8187823028
+        ],
+        "review_id": "7d66850769a045c9817635a948a389ec",
+        "document_bundle_id": "6ac7fc8b7cce4727b73a2e526f55902c",
+        "submitted_at": null,
+        "warnings": [
+          "쇼핑 API 모의 데이터"
+        ]
+      },
+      "request_id": "22e9e0f86e934246a684ad0d49df0780",
+      "version": 2,
+      "documents": [
+        "purchase_request",
+        "comparison",
+        "review"
+      ],
+      "status": "ready",
+      "stored_result_check": {
+        "quantity": 3,
+        "budget_krw": 900000,
+        "total_krw": 342000,
+        "all_document_headers_match": true,
+        "submitted_at": null
+      }
+    },
+    {
+      "case": "live05",
+      "metrics": {
+        "model_attempts": 6,
+        "tool_attempts": 5,
+        "tokens": 11305,
+        "elapsed_seconds": 6.796
+      },
+      "response": {
+        "status": "documents_ready",
+        "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+        "request_id": "febc66690aff41e5866682c109999768",
+        "version": 2,
+        "missing_fields": [],
+        "candidate_ids": [
+          8691064687
+        ],
+        "review_id": "1d3af8ba70b943d98287ab2862263bfe",
+        "document_bundle_id": "9b19616bf7f64145847ab8c771bbab55",
+        "submitted_at": null,
+        "warnings": [
+          "쇼핑 API 모의 데이터"
+        ]
+      },
+      "request_id": "febc66690aff41e5866682c109999768",
+      "version": 2,
+      "documents": [
+        "purchase_request",
+        "comparison",
+        "review"
+      ],
+      "status": "ready",
+      "stored_result_check": {
+        "quantity": 3,
+        "budget_krw": 900000,
+        "total_krw": 342000,
+        "all_document_headers_match": true,
+        "submitted_at": null
+      }
+    },
+    {
+      "case": "live06",
+      "metrics": {
+        "model_attempts": 6,
+        "tool_attempts": 5,
+        "tokens": 13167,
+        "elapsed_seconds": 6.935
+      },
+      "response": {
+        "status": "documents_ready",
+        "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+        "request_id": "1d115ed0b47c4f3bb783e5415ef904fa",
+        "version": 2,
+        "missing_fields": [],
+        "candidate_ids": [
+          8691064687,
+          8187823028
+        ],
+        "review_id": "82f9c632fb20434e9ab50cc134ad2de8",
+        "document_bundle_id": "35591904bcc3484e8bc5f2556fbbeaf3",
+        "submitted_at": null,
+        "warnings": [
+          "쇼핑 API 모의 데이터"
+        ]
+      },
+      "request_id": "1d115ed0b47c4f3bb783e5415ef904fa",
+      "version": 2,
+      "documents": [
+        "purchase_request",
+        "comparison",
+        "review"
+      ],
+      "status": "ready",
+      "stored_result_check": {
+        "quantity": 3,
+        "budget_krw": 900000,
+        "total_krw": 342000,
+        "all_document_headers_match": true,
+        "submitted_at": null
+      }
+    },
+    {
+      "case": "live07",
+      "metrics": {
+        "model_attempts": 6,
+        "tool_attempts": 5,
+        "tokens": 13233,
+        "elapsed_seconds": 6.571
+      },
+      "response": {
+        "status": "documents_ready",
+        "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+        "request_id": "5df3e6a10d9040d9be8b5ae2274ec659",
+        "version": 2,
+        "missing_fields": [],
+        "candidate_ids": [
+          8691064687,
+          8187823028
+        ],
+        "review_id": "689b7d064333443a930ec5e0a63404f9",
+        "document_bundle_id": "29e1a83066764e5094af3be6642f725f",
+        "submitted_at": null,
+        "warnings": [
+          "쇼핑 API 모의 데이터"
+        ]
+      },
+      "request_id": "5df3e6a10d9040d9be8b5ae2274ec659",
+      "version": 2,
+      "documents": [
+        "purchase_request",
+        "comparison",
+        "review"
+      ],
+      "status": "ready",
+      "stored_result_check": {
+        "quantity": 3,
+        "budget_krw": 900000,
+        "total_krw": 342000,
+        "all_document_headers_match": true,
+        "submitted_at": null
+      }
+    },
+    {
+      "case": "live08",
+      "metrics": {
+        "model_attempts": 6,
+        "tool_attempts": 5,
+        "tokens": 11441,
+        "elapsed_seconds": 6.98
+      },
+      "response": {
+        "status": "documents_ready",
+        "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+        "request_id": "ce4a91a95cc64ab982721d6a113e9227",
+        "version": 2,
+        "missing_fields": [],
+        "candidate_ids": [
+          8691064687
+        ],
+        "review_id": "b3d834c6abda4121a59219b468594e1d",
+        "document_bundle_id": "5d6639a8c5a94d93884889bd012e582c",
+        "submitted_at": null,
+        "warnings": [
+          "쇼핑 API 모의 데이터"
+        ]
+      },
+      "request_id": "ce4a91a95cc64ab982721d6a113e9227",
+      "version": 2,
+      "documents": [
+        "purchase_request",
+        "comparison",
+        "review"
+      ],
+      "status": "ready",
+      "stored_result_check": {
+        "quantity": 3,
+        "budget_krw": 900000,
+        "total_krw": 342000,
+        "all_document_headers_match": true,
+        "submitted_at": null
+      }
+    },
+    {
+      "case": "live09",
+      "metrics": {
+        "model_attempts": 6,
+        "tool_attempts": 5,
+        "tokens": 13199,
+        "elapsed_seconds": 6.53
+      },
+      "response": {
+        "status": "documents_ready",
+        "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+        "request_id": "b6ef7fc4b5274bb7abd83049eff7f2c4",
+        "version": 2,
+        "missing_fields": [],
+        "candidate_ids": [
+          8691064687,
+          8187823028
+        ],
+        "review_id": "99848c6084ba4847864f78c36cc3e4e9",
+        "document_bundle_id": "befb5edffc3f4245a496075f8067738d",
+        "submitted_at": null,
+        "warnings": [
+          "쇼핑 API 모의 데이터"
+        ]
+      },
+      "request_id": "b6ef7fc4b5274bb7abd83049eff7f2c4",
+      "version": 2,
+      "documents": [
+        "purchase_request",
+        "comparison",
+        "review"
+      ],
+      "status": "ready",
+      "stored_result_check": {
+        "quantity": 3,
+        "budget_krw": 900000,
+        "total_krw": 342000,
+        "all_document_headers_match": true,
+        "submitted_at": null
+      }
+    },
+    {
+      "case": "live10",
+      "metrics": {
+        "model_attempts": 6,
+        "tool_attempts": 5,
+        "tokens": 13066,
+        "elapsed_seconds": 6.767
+      },
+      "response": {
+        "status": "documents_ready",
+        "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+        "request_id": "3d05dc15492a47c08ddd196bbe6bdcaf",
+        "version": 2,
+        "missing_fields": [],
+        "candidate_ids": [
+          8691064687,
+          8187823028
+        ],
+        "review_id": "f9ac61dc71634b04885f2993e73f7368",
+        "document_bundle_id": "4bf0fa334a784de28140f870f7c1aa17",
+        "submitted_at": null,
+        "warnings": [
+          "쇼핑 API 모의 데이터"
+        ]
+      },
+      "request_id": "3d05dc15492a47c08ddd196bbe6bdcaf",
+      "version": 2,
+      "documents": [
+        "purchase_request",
+        "comparison",
+        "review"
+      ],
+      "status": "ready",
+      "stored_result_check": {
+        "quantity": 3,
+        "budget_krw": 900000,
+        "total_krw": 342000,
+        "all_document_headers_match": true,
+        "submitted_at": null
+      }
+    },
+    {
+      "case": "live11",
+      "metrics": {
+        "model_attempts": 6,
+        "tool_attempts": 5,
+        "tokens": 11465,
+        "elapsed_seconds": 6.902
+      },
+      "response": {
+        "status": "documents_ready",
+        "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+        "request_id": "a456ae11531c45b48d9ce8a01bf8cee1",
+        "version": 2,
+        "missing_fields": [],
+        "candidate_ids": [
+          8691064687
+        ],
+        "review_id": "121b7f958bb34c06afcb4eb60f264884",
+        "document_bundle_id": "e23cdb354afc40d38db0016badbab078",
+        "submitted_at": null,
+        "warnings": [
+          "쇼핑 API 모의 데이터"
+        ]
+      },
+      "request_id": "a456ae11531c45b48d9ce8a01bf8cee1",
+      "version": 2,
+      "documents": [
+        "purchase_request",
+        "comparison",
+        "review"
+      ],
+      "status": "ready",
+      "stored_result_check": {
+        "quantity": 3,
+        "budget_krw": 900000,
+        "total_krw": 342000,
+        "all_document_headers_match": true,
+        "submitted_at": null
+      }
+    },
+    {
+      "case": "live12",
+      "metrics": {
+        "model_attempts": 6,
+        "tool_attempts": 5,
+        "tokens": 13140,
+        "elapsed_seconds": 6.102
+      },
+      "response": {
+        "status": "documents_ready",
+        "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+        "request_id": "96067d02552b46ceba102a28d95c4f07",
+        "version": 2,
+        "missing_fields": [],
+        "candidate_ids": [
+          8691064687,
+          8187823028
+        ],
+        "review_id": "68750202363b462ca3fba4b5ca79d3c5",
+        "document_bundle_id": "b395add54a9c47c985e5b750146bc178",
+        "submitted_at": null,
+        "warnings": [
+          "쇼핑 API 모의 데이터"
+        ]
+      },
+      "request_id": "96067d02552b46ceba102a28d95c4f07",
+      "version": 2,
+      "documents": [
+        "purchase_request",
+        "comparison",
+        "review"
+      ],
+      "status": "ready",
+      "stored_result_check": {
+        "quantity": 3,
+        "budget_krw": 900000,
+        "total_krw": 342000,
+        "all_document_headers_match": true,
+        "submitted_at": null
+      }
+    },
+    {
+      "case": "live13",
+      "metrics": {
+        "model_attempts": 6,
+        "tool_attempts": 5,
+        "tokens": 13208,
+        "elapsed_seconds": 6.6
+      },
+      "response": {
+        "status": "documents_ready",
+        "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+        "request_id": "aacd0c1fd7d2417d913cc03c2b28bbab",
+        "version": 2,
+        "missing_fields": [],
+        "candidate_ids": [
+          8691064687,
+          8187823028
+        ],
+        "review_id": "7c558504296a4cfa8f97b3d30a486cbd",
+        "document_bundle_id": "66ccdc9ad07b4aeb85befb546bb27e26",
+        "submitted_at": null,
+        "warnings": [
+          "쇼핑 API 모의 데이터"
+        ]
+      },
+      "request_id": "aacd0c1fd7d2417d913cc03c2b28bbab",
+      "version": 2,
+      "documents": [
+        "purchase_request",
+        "comparison",
+        "review"
+      ],
+      "status": "ready",
+      "stored_result_check": {
+        "quantity": 3,
+        "budget_krw": 900000,
+        "total_krw": 342000,
+        "all_document_headers_match": true,
+        "submitted_at": null
+      }
+    },
+    {
+      "case": "live14",
+      "metrics": {
+        "model_attempts": 6,
+        "tool_attempts": 5,
+        "tokens": 13159,
+        "elapsed_seconds": 5.958
+      },
+      "response": {
+        "status": "documents_ready",
+        "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+        "request_id": "03d7c82567314befb264b8cb3c7f056c",
+        "version": 2,
+        "missing_fields": [],
+        "candidate_ids": [
+          8691064687,
+          8187823028
+        ],
+        "review_id": "81ab875c03484ac9939623c59d5caaca",
+        "document_bundle_id": "a33244e53e94451a9b4fe0d5160eea22",
+        "submitted_at": null,
+        "warnings": [
+          "쇼핑 API 모의 데이터"
+        ]
+      },
+      "request_id": "03d7c82567314befb264b8cb3c7f056c",
+      "version": 2,
+      "documents": [
+        "purchase_request",
+        "comparison",
+        "review"
+      ],
+      "status": "ready",
+      "stored_result_check": {
+        "quantity": 3,
+        "budget_krw": 900000,
+        "total_krw": 342000,
+        "all_document_headers_match": true,
+        "submitted_at": null
+      }
+    },
+    {
+      "case": "live15",
+      "metrics": {
+        "model_attempts": 6,
+        "tool_attempts": 5,
+        "tokens": 13170,
+        "elapsed_seconds": 6.154
+      },
+      "response": {
+        "status": "documents_ready",
+        "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+        "request_id": "16b4a85a9491417b808f3ace683c3fbf",
+        "version": 2,
+        "missing_fields": [],
+        "candidate_ids": [
+          8691064687,
+          8187823028
+        ],
+        "review_id": "03bd7c65371f4218841af7847b44e033",
+        "document_bundle_id": "c0856c9570e541f2a50adbc0fe5b4ab6",
+        "submitted_at": null,
+        "warnings": [
+          "쇼핑 API 모의 데이터"
+        ]
+      },
+      "request_id": "16b4a85a9491417b808f3ace683c3fbf",
+      "version": 2,
+      "documents": [
+        "purchase_request",
+        "comparison",
+        "review"
+      ],
+      "status": "ready",
+      "stored_result_check": {
+        "quantity": 3,
+        "budget_krw": 900000,
+        "total_krw": 342000,
+        "all_document_headers_match": true,
+        "submitted_at": null
+      }
+    },
+    {
+      "case": "live16",
+      "metrics": {
+        "model_attempts": 6,
+        "tool_attempts": 5,
+        "tokens": 13163,
+        "elapsed_seconds": 6.604
+      },
+      "response": {
+        "status": "documents_ready",
+        "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+        "request_id": "d9fe4580b2854f22ac0ffd7582f29a67",
+        "version": 2,
+        "missing_fields": [],
+        "candidate_ids": [
+          8691064687,
+          8187823028
+        ],
+        "review_id": "f15c965aae2941ffa98106c8ffb418d3",
+        "document_bundle_id": "fc1d1259185f41feb571a6a9c6a3f152",
+        "submitted_at": null,
+        "warnings": [
+          "쇼핑 API 모의 데이터"
+        ]
+      },
+      "request_id": "d9fe4580b2854f22ac0ffd7582f29a67",
+      "version": 2,
+      "documents": [
+        "purchase_request",
+        "comparison",
+        "review"
+      ],
+      "status": "ready",
+      "stored_result_check": {
+        "quantity": 3,
+        "budget_krw": 900000,
+        "total_krw": 342000,
+        "all_document_headers_match": true,
+        "submitted_at": null
+      }
+    },
+    {
+      "case": "live17",
+      "metrics": {
+        "model_attempts": 6,
+        "tool_attempts": 5,
+        "tokens": 11502,
+        "elapsed_seconds": 6.567
+      },
+      "response": {
+        "status": "documents_ready",
+        "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+        "request_id": "55ec4e866d714604a9bae43a0e6e7db0",
+        "version": 2,
+        "missing_fields": [],
+        "candidate_ids": [
+          8691064687
+        ],
+        "review_id": "81711b5aeb4a468b991874b002ed48ba",
+        "document_bundle_id": "3f5980c55de44782aecbfcd7abe4f3a0",
+        "submitted_at": null,
+        "warnings": [
+          "쇼핑 API 모의 데이터"
+        ]
+      },
+      "request_id": "55ec4e866d714604a9bae43a0e6e7db0",
+      "version": 2,
+      "documents": [
+        "purchase_request",
+        "comparison",
+        "review"
+      ],
+      "status": "ready",
+      "stored_result_check": {
+        "quantity": 3,
+        "budget_krw": 900000,
+        "total_krw": 342000,
+        "all_document_headers_match": true,
+        "submitted_at": null
+      }
+    },
+    {
+      "case": "live18",
+      "metrics": {
+        "model_attempts": 6,
+        "tool_attempts": 5,
+        "tokens": 13206,
+        "elapsed_seconds": 6.212
+      },
+      "response": {
+        "status": "documents_ready",
+        "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+        "request_id": "89158e38f5ff462b8b7a935bdf2e1539",
+        "version": 2,
+        "missing_fields": [],
+        "candidate_ids": [
+          8691064687,
+          8187823028
+        ],
+        "review_id": "8b39d6b0f5194a708fb43e1df6e73321",
+        "document_bundle_id": "e99d863d54334eccaa2be06ed294ef50",
+        "submitted_at": null,
+        "warnings": [
+          "쇼핑 API 모의 데이터"
+        ]
+      },
+      "request_id": "89158e38f5ff462b8b7a935bdf2e1539",
+      "version": 2,
+      "documents": [
+        "purchase_request",
+        "comparison",
+        "review"
+      ],
+      "status": "ready",
+      "stored_result_check": {
+        "quantity": 3,
+        "budget_krw": 900000,
+        "total_krw": 342000,
+        "all_document_headers_match": true,
+        "submitted_at": null
+      }
+    },
+    {
+      "case": "live19",
+      "metrics": {
+        "model_attempts": 6,
+        "tool_attempts": 5,
+        "tokens": 11475,
+        "elapsed_seconds": 6.427
+      },
+      "response": {
+        "status": "documents_ready",
+        "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+        "request_id": "d71592dcac0e4ef3a7169514f27fc3bf",
+        "version": 2,
+        "missing_fields": [],
+        "candidate_ids": [
+          8691064687
+        ],
+        "review_id": "e919e662e92341e79eec6a64a7f9ff4f",
+        "document_bundle_id": "4324093bc29b4530b21222448ca0c167",
+        "submitted_at": null,
+        "warnings": [
+          "쇼핑 API 모의 데이터"
+        ]
+      },
+      "request_id": "d71592dcac0e4ef3a7169514f27fc3bf",
+      "version": 2,
+      "documents": [
+        "purchase_request",
+        "comparison",
+        "review"
+      ],
+      "status": "ready",
+      "stored_result_check": {
+        "quantity": 3,
+        "budget_krw": 900000,
+        "total_krw": 342000,
+        "all_document_headers_match": true,
+        "submitted_at": null
+      }
+    },
+    {
+      "case": "live20",
+      "metrics": {
+        "model_attempts": 6,
+        "tool_attempts": 5,
+        "tokens": 13167,
+        "elapsed_seconds": 6.86
+      },
+      "response": {
+        "status": "documents_ready",
+        "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+        "request_id": "b2c69e25c7af404f8c859510b7832efe",
+        "version": 2,
+        "missing_fields": [],
+        "candidate_ids": [
+          8691064687,
+          8187823028
+        ],
+        "review_id": "c639d5eb2f0f4dd78087141c4980381c",
+        "document_bundle_id": "86b76849383348bca90077dee4a0e963",
+        "submitted_at": null,
+        "warnings": [
+          "쇼핑 API 모의 데이터"
+        ]
+      },
+      "request_id": "b2c69e25c7af404f8c859510b7832efe",
+      "version": 2,
+      "documents": [
+        "purchase_request",
+        "comparison",
+        "review"
+      ],
+      "status": "ready",
+      "stored_result_check": {
+        "quantity": 3,
+        "budget_krw": 900000,
+        "total_krw": 342000,
+        "all_document_headers_match": true,
+        "submitted_at": null
+      }
+    }
+  ],
+  "python": "3.12.13"
+}
