@@ -632,15 +632,15 @@ def detail_screen(service, context, state):
 
 
 def main(service=None):
-    st.set_page_config(page_title="SK-TASK", page_icon="📁", layout="wide")
+    st.set_page_config(page_title="Smart Buyer", page_icon="📁", layout="wide")
     service = (
         service
         if service is not None
         else get_service(os.environ.get("PURCHASE_DB_PATH", str(ROOT / "runtime/purchase.sqlite3")))
     )
     style()
-    st.sidebar.title("SK-TASK")
-    st.sidebar.caption("Task Automation for Supplier Knowledge")
+    st.sidebar.title("Smart Buyer")
+    st.sidebar.caption("사내 구매요청 AI 도우미")
     # 설정은 탐색 메뉴 아래에 배치하되, 동작 UI를 렌더링하기 전에 현재 사용자를 확정한다.
     navigation = st.sidebar.container()
     settings = st.sidebar.expander("시연 설정")

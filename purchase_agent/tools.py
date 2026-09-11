@@ -2,6 +2,7 @@
 
 from langchain_core.tools import tool
 
+from .guardrails.intent import validate_values
 from .schemas import DraftInput, RequestInput, RequestPatch, RequestRef, ToolResult
 
 
@@ -40,6 +41,8 @@ def build_tools(session):
         """모니터 조건을 저장한다. 예산을 알기 전에도 수량/목적 일부를 저장할 수 있으며, 조건이 완성되어야 요청을 생성한다. use_department_budget은 사용자가 팀 예산을 요청한 경우에만 서버의 모의 부서 한도를 적용한다. 목적은 선택 사항이다. 수정 시에는 request_id와 최신 expected_version이 필요하며, 변경하지 않는 필드는 생략한다. 반환된 selected_evidence_id만 선택한다. 가격/사용자/상태는 절대 전달하지 않는다."""
         if session.search_only and (selected_evidence_id is not None or clear_selection):
             return failure("SEARCH_ONLY: selection changes require a separate user request")
+        if use_department_budget and not session.department_budget_requested:
+            return failure("DEPARTMENT_BUDGET_NOT_REQUESTED")
         values = {
             key: value
             for key, value in {
@@ -51,14 +54,36 @@ def build_tools(session):
             }.items()
             if value is not None
         }
+        known = {**session.draft_inputs, **session.confirmed_inputs}
+        selected = None
+        if session.current_request:
+            current = service.get_latest_request(ctx, session.current_request)
+            if current.ok:
+                known = current.data.request.inputs.model_dump()
+                selected = current.data.request.selected_evidence_id
+        if (
+            not known.get("budget_krw")
+            and session.department_budget_requested
+            and session.department_budget
+        ):
+            known = {**known, "budget_krw": session.department_budget["available_krw"]}
+        error = validate_values(session, values, known)
+        if error:
+            return failure(error)
+        if (
+            selected_evidence_id is not None
+            and selected_evidence_id != selected
+            and not session.selection_requested
+        ):
+            return failure(
+                "SELECTION_NOT_REQUESTED: 상품 후보를 보여주고 사용자에게 선택을 요청하세요."
+            )
         if clear_purpose:
             values["purpose"] = None
         if clear_selection:
             values["selected_evidence_id"] = None
         try:
             if use_department_budget:
-                if not session.department_budget_requested:
-                    return failure("DEPARTMENT_BUDGET_NOT_REQUESTED")
                 budget = service.get_department_budget(ctx)
                 if not budget.ok:
                     return result(budget)
@@ -119,6 +144,9 @@ def build_tools(session):
                 )
             if value.ok:
                 session.current_request = value.data.request_id
+                if selected_evidence_id is not None:
+                    session.selection_requested = False
+                    session.selection_instruction = None
             elif value.error_code == "UNKNOWN_PRODUCT" and request_id:
                 latest = service.get_latest_request(ctx, request_id)
                 if latest.ok:

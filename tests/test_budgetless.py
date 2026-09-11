@@ -32,6 +32,8 @@ def test_budgetless_search_preserves_quantity_and_creates_no_request(service):
     assert session.current_request is None
     assert session.draft_inputs["quantity"] == 1
     assert session.explored
+    assert session.selection_requested
+    assert "제일 비싼" in session.selection_instruction
     assert result["response"].missing_fields == ["budget_krw"]
     assert "1대" in result["response"].message
     assert service.list_requests(OWNER, ListQuery(folder="mine")).data.total == 0
@@ -48,6 +50,8 @@ def test_budgetless_search_preserves_quantity_and_creates_no_request(service):
     assert detail.request.inputs.quantity == 1
     assert detail.request.inputs.budget_krw == 500000
     assert not session.search_only
+    assert session.selection_requested
+    assert "제일 비싼" in session.selection_instruction
 
 
 def test_mock_budget_context_is_scoped_and_requires_user_intent(service):
@@ -64,8 +68,8 @@ def test_mock_budget_context_is_scoped_and_requires_user_intent(service):
 
 
 def test_explicit_amount_is_not_overridden_by_team_budget(service):
-    session = AgentSession(service, OWNER, ScriptModel(responses=[]))
-    session.department_budget_requested = True
+    session = AgentSession(service, OWNER, ScriptModel(responses=[answer()]))
+    session.invoke("모니터 1대, 우리 팀 예산을 조회하되 이번 구매 예산은 10만원이야.")
     tool = next(t for t in build_tools(session) if t.name == "upsert_purchase_request")
     result = tool.invoke({"quantity": 1, "budget_krw": 100000, "use_department_budget": True})
     assert result["ok"] and result["data"]["inputs"]["budget_krw"] == 100000
@@ -86,7 +90,8 @@ def test_catalog_extreme_sort_applies_before_limit(service):
 
 
 def test_explored_candidates_transfer_to_created_request(service):
-    session = AgentSession(service, OWNER, ScriptModel(responses=[]))
+    session = AgentSession(service, OWNER, ScriptModel(responses=[answer()]))
+    session.invoke("모니터 1대, 예산 50만원으로 제일 비싼 상품을 골라줘.")
     tools = {t.name: t for t in build_tools(session)}
     explored = tools["search_coupang_products"].invoke(
         {"keyword": "monitor", "sort_by": "price_desc"}

@@ -1,5 +1,5 @@
 {
-  "name": "sk-task-dev-tools",
+  "name": "smart-buyer-dev-tools",
   "private": true,
   "scripts": {
     "format": "prettier --write .",

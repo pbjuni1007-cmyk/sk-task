@@ -1,6 +1,6 @@
 # Agent 코드 읽기 안내
 
-SK-TASK는 단일 Agent가 8개 도구를 선택해 호출하는 구조다. 화면의 직접 입력과 AI 입력은 같은 업무 서비스에 연결된다.
+Smart Buyer는 단일 Agent가 8개 도구를 선택해 호출하는 구조다. 화면의 직접 입력과 AI 입력은 같은 업무 서비스에 연결된다.
 
 ```mermaid
 flowchart TD
@@ -55,14 +55,15 @@ flowchart TD
 
 가드레일은 모델과 사용자의 입력이 업무 상태를 잘못 바꾸지 않도록 검사하는 경계다. 다음 순서로 읽으면 각 검사의 위치와 호출자를 함께 볼 수 있다.
 
-| 파일                                                               | 검사                                                    | 호출 위치                |
-| ------------------------------------------------------------------ | ------------------------------------------------------- | ------------------------ |
-| [input.py](../../purchase_agent/guardrails/input.py)               | 개인정보 마스킹·입력 길이 제한                          | Agent 입력과 표시 메시지 |
-| [tools.py](../../purchase_agent/guardrails/tools.py)               | 검색만 요청한 턴, 준비되지 않은 문서·제출 도구 차단     | 모델 호출 직전           |
-| [execution.py](../../purchase_agent/guardrails/execution.py)       | 모델 6회·도구 10회·60초, 토큰 집계, 스트림 오류         | 모델 및 도구 실행        |
-| [output.py](../../purchase_agent/guardrails/output.py)             | 상품·버전·검토·문서·제출 완료를 서버 근거와 대조        | 최종 응답 직전           |
-| [access.py](../../purchase_agent/guardrails/access.py)             | 시연 사용자·부서·역할·요청 소유권·최신 버전             | 업무 서비스 조회·변경    |
-| [confirmation.py](../../purchase_agent/guardrails/confirmation.py) | 제출 동의의 사용자·대화·버전 결속, 토큰 만료, 문서 해시 | 제출 트랜잭션 내부       |
+| 파일                                                               | 검사                                                             | 호출 위치                |
+| ------------------------------------------------------------------ | ---------------------------------------------------------------- | ------------------------ |
+| [intent.py](../../purchase_agent/guardrails/intent.py)             | 사용자 발화·저장된 값과 수량/예산 대조, 상품 선택·위임 의도 확인 | Agent 입력·조건 저장 전  |
+| [input.py](../../purchase_agent/guardrails/input.py)               | 개인정보 마스킹·입력 길이 제한                                   | Agent 입력과 표시 메시지 |
+| [tools.py](../../purchase_agent/guardrails/tools.py)               | 검색만 요청한 턴, 준비되지 않은 문서·제출 도구 차단              | 모델 호출 직전           |
+| [execution.py](../../purchase_agent/guardrails/execution.py)       | 모델 6회·도구 10회·60초, 토큰 집계, 스트림 오류                  | 모델 및 도구 실행        |
+| [output.py](../../purchase_agent/guardrails/output.py)             | 상품·버전·검토·문서·제출 완료를 서버 근거와 대조                 | 최종 응답 직전           |
+| [access.py](../../purchase_agent/guardrails/access.py)             | 시연 사용자·부서·역할·요청 소유권·최신 버전                      | 업무 서비스 조회·변경    |
+| [confirmation.py](../../purchase_agent/guardrails/confirmation.py) | 제출 동의의 사용자·대화·버전 결속, 토큰 만료, 문서 해시          | 제출 트랜잭션 내부       |
 
 `schemas.py`는 자료형·값 범위를, `policy.py`는 배송비와 구매 규정을 담당한다. `workflow.py`는 DB를 읽고 가드레일을 호출한 뒤 저장한다. 도구 노출 제한만으로 권한을 보장하지 않으며, 직접 입력 화면도 서비스의 같은 검사를 거친다. 기존 `middleware.py`는 호환용 import만 제공한다.
 
@@ -72,3 +73,5 @@ flowchart TD
 2. “우리 팀 예산에 맞게”: `get_department_budget`과 [budgets.py](../../purchase_agent/budgets.py)의 정적 모의 한도를 사용한다. `development`는 잔액 120만 원·건별 한도 50만 원이므로 이번 요청 예산은 50만 원이다. 잔액 예약·차감 기능은 없다.
 3. 검색 후보 중 조건에 맞는 상품을 선택하고 기존 검토→문서 흐름을 이어간다. 정렬은 내부 모의 카탈로그에서 적용하며 실제 쿠팡 전체의 최저·최고가를 뜻하지 않는다.
 4. [ui/execution.py](../../purchase_agent/ui/execution.py)는 작업 스레드의 이벤트를 큐로 받아 Streamlit 화면 스레드에서 진행 단계를 갱신한다. 모델 원문 대신 도구 시작·완료를 표시하고, 검증된 최종 답변만 대화에 저장한다.
+
+누락 조건을 모델이 임의로 채우면 `UNCONFIRMED_INPUT`으로 저장을 거절한다. 수량은 `3대`, `두 대`, 예산은 `60만원`, `600000원` 등의 명시적 표현과 이미 확인한 값을 사용한다. 불명확한 표현은 다시 질문한다. 일반적인 “구매요청서 써줘”는 상품 선택 위임이 아니므로 후보 조회 후 선택을 요청한다. “선택해줘”, “예산 안에서 제일 비싼 걸로 작성해줘”처럼 선택·위임한 경우에는 기존 흐름을 이어 간다.

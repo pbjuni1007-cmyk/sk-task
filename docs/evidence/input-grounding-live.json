@@ -1,0 +1,322 @@
+{
+  "service": "Smart Buyer",
+  "verified_at": "2026-09-11T06:11:19.373644+00:00",
+  "method": "실제 OpenAI 모델, 사용자 확인 카탈로그의 모의 검색, 요청별 임시 SQLite. 브라우저 수동 시연은 아님.",
+  "source_hash": "64a8a3a650ac553b5f1dae0ba0488c47eae192a69ab693807cf0734bd16858d5",
+  "model": "gpt-4o-mini",
+  "model_call_limit": 6,
+  "checks": {
+    "missing_input_runs": 3,
+    "explicit_selection_and_documents": true,
+    "quantity_update_preserves_selection": true,
+    "department_budget_delegation": true,
+    "no_submission": true
+  },
+  "results": [
+    {
+      "input": "모니터 구매요청서 써줘.",
+      "status": "needs_input",
+      "message": "예산을 정하기 전에도 상품을 먼저 검색할 수 있습니다. 요청서를 만들려면 수량과 이번 구매의 배송비 포함 예산을 알려주세요. 팀 예산을 적용하도록 요청해도 됩니다.",
+      "missing": [
+        "quantity",
+        "budget_krw"
+      ],
+      "quantity": null,
+      "budget": null,
+      "selected": null,
+      "total": null,
+      "candidates": 0,
+      "documents": false,
+      "submitted": false,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        }
+      ],
+      "metrics": {
+        "model_attempts": 2,
+        "tool_attempts": 1,
+        "tokens": 3000,
+        "elapsed_seconds": 2.324
+      }
+    },
+    {
+      "input": "3대, 예산은 배송비 포함 60만원이야.",
+      "status": "candidates_ready",
+      "message": "상품 후보를 찾았습니다. 비교 후 구매할 상품을 선택해 주세요.",
+      "missing": [],
+      "quantity": 3,
+      "budget": 600000,
+      "selected": null,
+      "total": null,
+      "candidates": 10,
+      "documents": false,
+      "submitted": false,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        }
+      ],
+      "metrics": {
+        "model_attempts": 3,
+        "tool_attempts": 2,
+        "tokens": 10021,
+        "elapsed_seconds": 3.636
+      }
+    },
+    {
+      "input": "클라인즈 상품을 선택하고 문서 3종 만들어줘. 목적은 신입 개발자 장비 지급이야. 제출하지마.",
+      "status": "documents_ready",
+      "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+      "missing": [],
+      "quantity": 3,
+      "budget": 600000,
+      "selected": "coupang-user-8691064687-92229415852-v1",
+      "total": 342000,
+      "candidates": 10,
+      "documents": true,
+      "submitted": false,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ],
+      "metrics": {
+        "model_attempts": 4,
+        "tool_attempts": 3,
+        "tokens": 48178,
+        "elapsed_seconds": 8.3
+      }
+    },
+    {
+      "input": "선택 상품과 목적은 유지하고 수량만 4대로 바꿔줘. 규정 검토 후 문서 3종 만들어줘. 제출하지마.",
+      "status": "documents_ready",
+      "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+      "missing": [],
+      "quantity": 4,
+      "budget": 600000,
+      "selected": "coupang-user-8691064687-92229415852-v1",
+      "total": 456000,
+      "candidates": 10,
+      "documents": true,
+      "submitted": false,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ],
+      "metrics": {
+        "model_attempts": 5,
+        "tool_attempts": 3,
+        "tokens": 43278,
+        "elapsed_seconds": 9.698
+      }
+    },
+    {
+      "input": "모니터 구매요청서 써줘.",
+      "status": "needs_input",
+      "message": "예산을 정하기 전에도 상품을 먼저 검색할 수 있습니다. 요청서를 만들려면 수량과 이번 구매의 배송비 포함 예산을 알려주세요. 팀 예산을 적용하도록 요청해도 됩니다.",
+      "missing": [
+        "quantity",
+        "budget_krw"
+      ],
+      "quantity": null,
+      "budget": null,
+      "selected": null,
+      "total": null,
+      "candidates": 0,
+      "documents": false,
+      "submitted": false,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        }
+      ],
+      "metrics": {
+        "model_attempts": 2,
+        "tool_attempts": 1,
+        "tokens": 3000,
+        "elapsed_seconds": 1.816
+      }
+    },
+    {
+      "input": "3대, 예산은 배송비 포함 60만원이야.",
+      "status": "candidates_ready",
+      "message": "상품 후보를 찾았습니다. 비교 후 구매할 상품을 선택해 주세요.",
+      "missing": [],
+      "quantity": 3,
+      "budget": 600000,
+      "selected": null,
+      "total": null,
+      "candidates": 10,
+      "documents": false,
+      "submitted": false,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        }
+      ],
+      "metrics": {
+        "model_attempts": 3,
+        "tool_attempts": 2,
+        "tokens": 10005,
+        "elapsed_seconds": 3.947
+      }
+    },
+    {
+      "input": "모니터 구매요청서 써줘.",
+      "status": "needs_input",
+      "message": "예산을 정하기 전에도 상품을 먼저 검색할 수 있습니다. 요청서를 만들려면 수량과 이번 구매의 배송비 포함 예산을 알려주세요. 팀 예산을 적용하도록 요청해도 됩니다.",
+      "missing": [
+        "quantity",
+        "budget_krw"
+      ],
+      "quantity": null,
+      "budget": null,
+      "selected": null,
+      "total": null,
+      "candidates": 0,
+      "documents": false,
+      "submitted": false,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        }
+      ],
+      "metrics": {
+        "model_attempts": 2,
+        "tool_attempts": 1,
+        "tokens": 3000,
+        "elapsed_seconds": 2.286
+      }
+    },
+    {
+      "input": "3대, 예산은 배송비 포함 60만원이야.",
+      "status": "candidates_ready",
+      "message": "상품 후보를 찾았습니다. 비교 후 구매할 상품을 선택해 주세요.",
+      "missing": [],
+      "quantity": 3,
+      "budget": 600000,
+      "selected": null,
+      "total": null,
+      "candidates": 10,
+      "documents": false,
+      "submitted": false,
+      "tools": [
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        }
+      ],
+      "metrics": {
+        "model_attempts": 3,
+        "tool_attempts": 2,
+        "tokens": 9982,
+        "elapsed_seconds": 4.039
+      }
+    },
+    {
+      "input": "우리 부장님 모니터 바꿔야함. 제일 비싼걸로 1개 구매요청서 만들어줘. 목적은 부장님 모니터 교체야.",
+      "status": "candidates_ready",
+      "message": "모니터 1대 구매로 이해했습니다. 등록된 모의 상품 후보를 찾았습니다. 예산을 확인한 뒤 위임한 기준으로 상품을 선택할 수 있습니다. 요청서를 만들려면 이번 구매의 배송비 포함 예산을 알려주세요. 팀 예산을 적용하도록 요청해도 됩니다.",
+      "missing": [
+        "budget_krw"
+      ],
+      "quantity": null,
+      "budget": null,
+      "selected": null,
+      "total": null,
+      "candidates": 0,
+      "documents": false,
+      "submitted": false,
+      "tools": [
+        {
+          "tool": "search_coupang_products",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        }
+      ],
+      "metrics": {
+        "model_attempts": 3,
+        "tool_attempts": 2,
+        "tokens": 12591,
+        "elapsed_seconds": 3.01
+      }
+    },
+    {
+      "input": "우리 팀 예산으로 해줘. 제출하지마.",
+      "status": "documents_ready",
+      "message": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
+      "missing": [],
+      "quantity": 1,
+      "budget": 500000,
+      "selected": "coupang-user-9570277602-95508230198-v1",
+      "total": 399000,
+      "candidates": 10,
+      "documents": true,
+      "submitted": false,
+      "tools": [
+        {
+          "tool": "get_department_budget",
+          "error_code": null
+        },
+        {
+          "tool": "upsert_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "review_purchase_request",
+          "error_code": null
+        },
+        {
+          "tool": "generate_documents",
+          "error_code": null
+        }
+      ],
+      "metrics": {
+        "model_attempts": 5,
+        "tool_attempts": 4,
+        "tokens": 54540,
+        "elapsed_seconds": 6.418
+      }
+    }
+  ]
+}

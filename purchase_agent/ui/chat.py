@@ -15,7 +15,7 @@ def panel(service, context, state, detail=None):
     if detail:
         sync_version(chat, detail.request.version)
     with st.container(key="ai_panel"):
-        st.subheader("SK-TASK AI 도우미")
+        st.subheader("Smart Buyer AI 도우미")
         session = chat.get("agent")
         if session and getattr(session, "department_budget", None):
             budget = session.department_budget

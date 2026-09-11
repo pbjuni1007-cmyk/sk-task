@@ -28,12 +28,14 @@ class WorkflowToolsMiddleware(AgentMiddleware):
             and not session.department_budget_requested
         ):
             allowed = set()
+        has_selection = False
         if session.current_request:
             current = session.service.get_latest_request(session.context, session.current_request)
             if current.ok:
                 d = current.data
                 allowed.add("get_request_status")
-                if d.request.selected_evidence_id:
+                has_selection = bool(d.request.selected_evidence_id)
+                if has_selection:
                     allowed.add("review_purchase_request")
                     if d.review:
                         allowed.add("generate_documents")
@@ -55,7 +57,9 @@ class WorkflowToolsMiddleware(AgentMiddleware):
                 "save_user_preferences",
                 "get_department_budget",
             }
-        if session.search_only and session.search_completed:
+        if session.search_completed and (
+            session.search_only or (not has_selection and not session.selection_requested)
+        ):
             allowed = set()
         if session.document_generated:
             allowed = (

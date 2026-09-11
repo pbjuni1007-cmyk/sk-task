@@ -21,15 +21,18 @@ def validate_response(session, output):
             output.status == "candidates_ready" and not ids
         ):
             raise ValueError("UNGROUNDED_OUTPUT")
-        missing = [k for k in ("quantity", "budget_krw") if not session.draft_inputs.get(k)]
+        inputs = {**session.draft_inputs, **session.confirmed_inputs}
+        missing = [k for k in ("quantity", "budget_krw") if not inputs.get(k)]
         labels = {"quantity": "수량", "budget_krw": "이번 구매의 배송비 포함 예산"}
         known = (
-            f"모니터 {session.draft_inputs['quantity']}대 구매로 이해했습니다. "
-            if session.draft_inputs.get("quantity")
-            else ""
+            f"모니터 {inputs['quantity']}대 구매로 이해했습니다. " if inputs.get("quantity") else ""
         )
         found = (
-            "등록된 모의 상품 후보를 찾았습니다. 아래에서 가격을 비교할 수 있습니다. "
+            (
+                "등록된 모의 상품 후보를 찾았습니다. 예산을 확인한 뒤 위임한 기준으로 상품을 선택할 수 있습니다. "
+                if session.selection_requested
+                else "등록된 모의 상품 후보를 찾았습니다. 아래에서 가격을 비교하고 구매할 상품을 선택해 주세요. "
+            )
             if session.explored
             else "예산을 정하기 전에도 상품을 먼저 검색할 수 있습니다. "
         )
@@ -38,7 +41,7 @@ def validate_response(session, output):
             + found
             + (
                 "요청서를 만들려면 "
-                + "와 ".join(labels[k] for k in missing)
+                + "과 ".join(labels[k] for k in missing)
                 + "을 알려주세요. 팀 예산을 적용하도록 요청해도 됩니다."
                 if missing
                 else "구매 조건을 확인해 주세요."
@@ -80,7 +83,9 @@ def validate_response(session, output):
             output.message = {
                 "documents_ready": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",
                 "submitted": "구매요청을 제출했습니다.",
-                "candidates_ready": "저장된 상품 후보를 확인해 주세요.",
+                "candidates_ready": "상품 후보를 찾았습니다. 비교 후 구매할 상품을 선택해 주세요."
+                if not d.request.selected_evidence_id
+                else "저장된 상품 후보를 확인해 주세요.",
             }[output.status]
         if output.status in ("needs_revision", "needs_input"):
             output.message = (
