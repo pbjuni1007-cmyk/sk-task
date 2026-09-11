@@ -1,0 +1,11 @@
+.venv/
+node_modules/
+runtime/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+# Preserve captured evidence and API snapshots byte-for-byte.
+docs/evidence/
+fixtures/
+package-lock.json
+.env*

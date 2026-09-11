@@ -56,3 +56,7 @@ http://127.0.0.1:8501/ 에서 구매 조건 → 상품 비교·선택 → 문서
 DB는 runtime/purchase.sqlite3. .env/runtime/.venv는 Git 제외 대상이다. macOS ARM64 이외 환경, 운영 인증 및 해상도별 시각 검증은 별도 범위다.
 
 전체 문서는 [문서 목차](docs/README.md)에서 확인할 수 있다.
+
+## 코드 읽기와 개발
+
+[Agent 흐름 안내](docs/AGENT_FLOW.md) 순서로 코드를 읽을 수 있다. 린트·포맷 설정과 `make check` 실행 방법은 [개발 도구 안내](docs/DEVELOPMENT.md)를 참고한다.

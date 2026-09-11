@@ -1,0 +1,16 @@
+[tool.ruff]
+required-version = "==0.16.1"
+target-version = "py312"
+line-length = 100
+extend-exclude = ["runtime"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.ruff.lint.per-file-ignores]
+# CLI scripts add the repository root to sys.path before importing the app.
+"scripts/*.py" = ["E402"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
