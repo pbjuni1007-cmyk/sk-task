@@ -73,7 +73,7 @@ class AgentSession:
         )
         self.store = PreferenceStore(service, context)
         self._build_graph()
-        self.config = {"configurable": {"thread_id": context.thread_id}, "recursion_limit": 40}
+        self.config = {"configurable": {"thread_id": context.thread_id}, "recursion_limit": 100}
 
     def _build_graph(self):
         # 모델이 도구를 선택하고 결과를 읽는 루프를 단일 Agent로 조립한다.
