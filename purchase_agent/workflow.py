@@ -185,7 +185,7 @@ class LocalPurchaseService:
     def list_requests(self, db, context, query):
         items = []
         for row in db.execute(
-            "SELECT v.body FROM versions v JOIN requests r ON v.id=r.id AND v.version=r.version"
+            "SELECT v.body FROM versions v JOIN requests r ON v.id=r.id AND v.version=r.version ORDER BY r.rowid DESC"
         ):
             d = RequestDetail.model_validate_json(row[0])
             r = d.request

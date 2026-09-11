@@ -1,78 +1,101 @@
-"""One actor-scoped Agent session, started only by an explicit user chat event."""
+"""현재 구매요청에 연결된 AI 대화. 화면 이동과 요청 생성을 구분한다."""
 
 import streamlit as st
 
 from purchase_agent.agent import AgentSession
 from purchase_agent.model import model_available
+from purchase_agent.ui.confirmations import remember_result
+from purchase_agent.ui.state import conversation, reset_execution, sync_version
 
 
-def panel(service, context, state):
-    st.subheader("SK-TASK AI 도우미")
-    available = model_available()
-    if not available:
-        st.info("프로젝트 .env에 OpenAI 키를 설정하면 AI 요청을 사용할 수 있습니다.")
-        return
-    st.caption("실제 AI 모델 · 쇼핑 정보는 모의 API 자료")
-    for role, text in state.get("chat_history", [])[-10:]:
-        with st.chat_message(role):
-            st.text(text)
-    # 대화 객체를 재사용해 여러 턴을 이어간다. 새 요청 진입 시 app에서 초기화한다.
-    session = state.get("agent")
-    pending = state.get("agent_result", {}).get("pending")
-    # pending은 제출 완료가 아니라 사용자 결정을 기다리는 Agent 중단 상태다.
-    if session and pending:
-        st.warning("아래 문서를 확인한 뒤 제출 여부를 선택해 주세요.")
-        st.text(f"요청 {pending.request.request_id} · 버전 {pending.request.version}")
-        for name, body in pending.documents.files.items():
-            with st.expander(name):
-                st.text(body)
-        st.text(f"배송비 포함 총액: {pending.review.review_total_krw:,}원")
-        a, b = st.columns(2)
-        decision = None
-        if a.button("AI 제출 취소", key="ai_cancel"):
-            decision = False
-        if b.button("확인 후 제출", key="ai_submit", type="primary"):
-            decision = True
-        if decision is not None:
-            with st.spinner("확인 결과 처리 중…"):
-                result = session.resume(decision)
-            state["agent_result"] = result
-            if result.get("response"):
-                state.setdefault("chat_history", []).append(
-                    ("assistant", result["response"].message)
-                )
-            st.rerun()
-        return
-    with st.form("ai_chat"):
-        text = st.text_area(
-            "AI 요청", placeholder="신입 3명용 모니터를 배송비 포함 90만 원 안에서 찾아줘"
-        )
-        consent = st.checkbox("이번 요청의 비교·표현 선호를 기억하는 데 동의합니다.")
-        sent = st.form_submit_button("AI에게 요청", type="primary")
-    if sent and text.strip():
+def panel(service, context, state, detail=None):
+    request_id = detail.request.request_id if detail else None
+    chat = conversation(state, request_id)
+    if detail:
+        sync_version(chat, detail.request.version)
+    with st.container(key="ai_panel"):
+        st.subheader("SK-TASK AI 도우미")
+        st.caption("현재 요청의 조건을 정리하고 상품 비교와 문서 작성을 도와드립니다.")
+        for role, text in chat.get("history", [])[-10:]:
+            with st.chat_message(role):
+                st.text(text)
+        if not model_available():
+            st.info("AI 연결이 설정되지 않았습니다. 왼쪽 양식으로 요청을 진행할 수 있습니다.")
+            return
+        if chat.get("result", {}).get("pending"):
+            st.info("제출 확인 창에서 최종 내용을 확인해 주세요.")
+            return
+        with st.form(f"ai_chat_{request_id or state['create_id']}", clear_on_submit=True):
+            text = st.text_area(
+                "AI 요청",
+                placeholder="예: 신규 입사자 3명용 모니터를 배송비 포함 50만 원 안에서 찾아줘",
+            )
+            consent = st.checkbox(
+                "상품 비교 선호 기억하기",
+                help="동의한 요청에서 비교 순서와 표현 선호만 저장합니다.",
+            )
+            sent = st.form_submit_button("AI에게 요청", type="primary")
+        if not sent or not text.strip():
+            return
         from purchase_agent.middleware import redact
 
+        session = chat.get("agent")
         if session is None:
             try:
                 session = AgentSession(service, context)
-                state["agent"] = session
+                chat["agent"] = session
             except Exception:
                 st.error("AI 연결 설정을 확인해 주세요.")
                 return
-        state.setdefault("chat_history", []).append(("user", redact(text)))
+        chat.setdefault("history", []).append(("user", redact(text)))
         with st.spinner("구매 조건과 업무 상태를 확인 중…"):
-            result = session.invoke(
-                text, preference_consent=consent, request_id=state.get("request_id")
-            )
-        state["agent_result"] = result
-        if result.get("response"):
-            state["chat_history"].append(("assistant", result["response"].message))
+            result = session.invoke(text, preference_consent=consent, request_id=request_id)
+        remember_result(chat, result)
         if session.current_request:
-            state["request_id"] = session.current_request
+            latest = service.get_latest_request(context, session.current_request)
+            if latest.ok:
+                current = latest.data
+                if request_id != session.current_request:
+                    if request_id is not None:
+                        previous = chat
+                        chat = {**chat, "history": list(chat.get("history", []))}
+                        reset_execution(previous)
+                    state.setdefault("conversations", {})[session.current_request] = chat
+                    state.pop("draft_chat", None)
+                state.update(view="detail", request_id=session.current_request)
+                if (
+                    detail is None
+                    or detail.request.version != current.request.version
+                    or bool(detail.documents) != bool(current.documents)
+                ):
+                    state["phase"] = 3 if current.documents else 2
+                if detail and detail.request.inputs != current.request.inputs:
+                    labels = {
+                        "quantity": "수량",
+                        "budget_krw": "예산",
+                        "purpose": "구매 목적",
+                        "requirements": "희망 사양",
+                    }
+                    changed = [
+                        label
+                        for field, label in labels.items()
+                        if getattr(detail.request.inputs, field)
+                        != getattr(current.request.inputs, field)
+                    ]
+                    state["notice"] = (
+                        "AI가 "
+                        + ", ".join(changed)
+                        + " 항목을 변경했습니다. 최신 내용을 확인해 주세요."
+                    )
+                chat["version"] = current.request.version
+                state.pop("submission", None)
+                if result.get("pending"):
+                    pending = result["pending"]
+                    state["phase"] = 3
+                    state["submission"] = dict(
+                        kind="ai",
+                        request_id=pending.request.request_id,
+                        version=pending.request.version,
+                        bundle_id=pending.documents.bundle_id,
+                    )
         st.rerun()
-    if session and session.current_request:
-        if st.button("AI가 작업한 요청 열기"):
-            state.update(
-                view="detail", request_id=session.current_request, confirmation=None, decision=None
-            )
-            st.rerun()

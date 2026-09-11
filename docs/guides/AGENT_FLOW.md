@@ -27,7 +27,8 @@ flowchart TD
 4. [schemas.py](../../purchase_agent/schemas.py): 요청, 상품 근거, 검토, 문서와 응답 형식을 찾아본다.
 5. [workflow.py](../../purchase_agent/workflow.py)의 `LocalPurchaseService`: UI와 AI가 공유하는 실제 업무 처리다. 조건·후보 변경 시 새 버전을 만들고, 변경 없는 재검토는 문서를 보존한다.
 6. [policy.py](../../purchase_agent/policy.py), [documents.py](../../purchase_agent/documents.py): 배송비 포함 금액과 승인 조건을 계산하고 문서 3종을 생성한다.
-7. [ui/chat.py](../../purchase_agent/ui/chat.py) → `AgentSession.invoke` → `_run` → `_validate` 또는 `resume` 순서로 화면과 실행을 연결한다.
+7. [ui/app.py](../../purchase_agent/ui/app.py)에서 내 업무·단계별 작성·요청 상세·결재 검토를 확인한다. [ui/state.py](../../purchase_agent/ui/state.py)는 사용자 안에서 요청별 대화를 분리한다. [ui/chat.py](../../purchase_agent/ui/chat.py) → `AgentSession.invoke` → `_run` → `_validate` 순서로 AI 실행을 따라간다.
+8. [ui/confirmations.py](../../purchase_agent/ui/confirmations.py)는 직접 입력과 AI의 공통 확인 창이다. 직접 입력은 준비한 확인 토큰으로 제출하고, AI는 `resume`으로 중단된 제출을 재개한다. 두 경로 모두 서버가 최신 버전·문서·권한을 다시 검증한다.
 
 ## 한 사례 따라가기
 
@@ -39,11 +40,13 @@ flowchart TD
 
 ## 상태를 구분해서 보기
 
-| 상태                    | 보관 위치                      | 역할                                                               |
-| ----------------------- | ------------------------------ | ------------------------------------------------------------------ |
-| 대화·중단 지점          | Agent의 `InMemorySaver`        | 여러 턴과 제출 확인 재개. 프로세스 재시작 시 유지되지 않는다.      |
-| 현재 AI 작업 대상       | `AgentSession.current_request` | 다음 턴에 DB에서 읽을 요청 ID. 새 요청 시작 시 Agent를 초기화한다. |
-| 구매요청·버전·문서·결재 | SQLite                         | 업무 데이터의 기준. 모델의 대화 요약으로 대체하지 않는다.          |
-| 사용자 선호             | SQLite와 `PreferenceStore`     | 동의한 비교·표현 선호만 사용자별로 저장한다.                       |
+| 상태                    | 보관 위치                      | 역할                                                                  |
+| ----------------------- | ------------------------------ | --------------------------------------------------------------------- |
+| 대화·중단 지점          | Agent의 `InMemorySaver`        | 여러 턴과 제출 확인 재개. 프로세스 재시작 시 유지되지 않는다.         |
+| 현재 AI 작업 대상       | `AgentSession.current_request` | 다음 턴에 DB에서 읽을 요청 ID. 요청별 Agent가 각자의 대화를 이어간다. |
+| 구매요청·버전·문서·결재 | SQLite                         | 업무 데이터의 기준. 모델의 대화 요약으로 대체하지 않는다.             |
+| 사용자 선호             | SQLite와 `PreferenceStore`     | 동의한 비교·표현 선호만 사용자별로 저장한다.                          |
 
 `@tool` 함수의 docstring은 모델에 전달되는 도구 설명이다. 개발자용 설명을 보강할 때는 일반 주석을 사용하고, 도구 설명을 수정하면 AI 동작 변경으로 검증한다.
+
+화면의 대화는 사용자별 `actor_sessions` 안의 `conversations[request_id]`에 둔다. 새 요청은 별도 `draft_chat`으로 시작하고 저장 후 요청 ID에 연결한다. 직접 수정으로 버전이 바뀌면 실행 그래프를 초기화하고 표시용 대화는 보존한다. 화면 이동은 대기 중인 제출을, 사용자 전환은 실행 상태를 폐기한다. 다른 사용자의 요청과 과거 버전에서는 AI 수정·제출을 표시하지 않는다.

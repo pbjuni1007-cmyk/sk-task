@@ -1,0 +1,136 @@
+/* 업무 화면의 고정 구조만 스타일링한다. 외부 상품·사용자 HTML은 삽입하지 않는다. */
+:root {
+  --ink: #243247;
+  --muted: #617087;
+  --line: #e2e7ee;
+  --accent: #245c4a;
+}
+.stApp {
+  background: #f6f7f9;
+}
+[data-testid="stMainBlockContainer"] {
+  max-width: 1440px;
+  padding-top: 4rem;
+  padding-bottom: 3rem;
+}
+[data-testid="stSidebar"] {
+  background: #fff;
+  border-right: 1px solid var(--line);
+}
+[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
+  gap: 0.65rem;
+}
+[data-testid="stSidebar"] button {
+  text-align: left;
+}
+.page-title {
+  color: var(--ink);
+  font-size: 28px;
+  font-weight: 750;
+  line-height: 1.4;
+  margin: 0.2rem 0 0.3rem;
+}
+.status {
+  display: inline-block;
+  border-radius: 5px;
+  padding: 5px 10px;
+  background: #e8edf3;
+  color: #43536b;
+  font-size: 14px;
+  font-weight: 650;
+}
+.status-ready,
+.status-approved {
+  color: #24634b;
+  background: #e6f2ec;
+}
+.status-submitted,
+.status-additional_approval {
+  color: #2c5780;
+  background: #eaf1f9;
+}
+.status-needs_revision,
+.status-rejected {
+  color: #925320;
+  background: #fff0e0;
+}
+.steps {
+  display: flex;
+  gap: 22px;
+  border-bottom: 1px solid var(--line);
+  padding: 12px 0 20px;
+  margin-bottom: 12px;
+}
+.step {
+  color: var(--muted);
+  font-size: 15px;
+}
+.step b {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #e8ecf0;
+  margin-right: 5px;
+}
+.step.active {
+  color: var(--accent);
+  font-weight: 700;
+}
+.step.active b {
+  color: white;
+  background: var(--accent);
+}
+.progress-line {
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 15px;
+}
+.progress-line strong {
+  color: var(--accent);
+}
+[data-testid="stMetricValue"] {
+  font-size: 25px;
+}
+[data-testid="stCaptionContainer"] {
+  font-size: 14px;
+}
+[data-testid="stExpander"] {
+  background: #fff;
+}
+div[class*="st-key-paper_"] {
+  background: white;
+  padding: 24px;
+}
+.st-key-ai_panel {
+  background: #eef3f0;
+  border-radius: 12px;
+  padding: 20px;
+}
+.st-key-action_footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.98);
+  padding: 16px;
+  border-top: 1px solid var(--line);
+}
+@media (max-width: 800px) {
+  [data-testid="stMainBlockContainer"] {
+    padding: 4rem 1rem 1rem;
+  }
+  .steps {
+    gap: 10px;
+  }
+  .step {
+    font-size: 14px;
+  }
+  .st-key-action_footer {
+    position: static;
+  }
+}

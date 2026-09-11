@@ -91,7 +91,7 @@ def test_create_empty_catalog_and_role_isolation(tmp_path):
     service = LocalPurchaseService(tmp_path / "empty.db")
     at = run_app(service)
     assert not at.exception
-    click(at, "구매요청 작성")
+    click(at, "+ 새 구매요청")
     click(at, "저장하고 상품 찾기")
     assert any("조건은 저장했지만" in w.value for w in at.warning)
     click(at, "후보 검색")
@@ -111,7 +111,7 @@ def test_missing_purpose_document_tabs_and_disabled_submit(tmp_path):
     at = run_app(service)
     click(at, "열기")
     assert [t.label for t in at.tabs] == ["구매요청서", "상품 비교표", "규정 검토"]
-    assert next(b for b in at.button if b.label == "구매요청 제출 확인").disabled
+    assert next(b for b in at.button if b.label == "구매팀에 제출").disabled
     assert len(at.get("download_button")) == 3
     assert any("구매 목적" in w.value for w in at.warning)
     assert service.get_request(owner, r).data.request.submitted_at is None
@@ -122,35 +122,34 @@ def test_explicit_confirmation_cancel_role_change_and_high_approval(tmp_path):
     r, owner = seed(service, quantity=4)
     at = run_app(service)
     click(at, "열기")
-    click(at, "구매요청 제출 확인")
-    confirmation = at.session_state["actor_sessions"]["employee_a"]["confirmation"]
+    click(at, "구매팀에 제출")
+    confirmation = at.session_state["actor_sessions"]["employee_a"]["submission"]["confirmation"]
     assert confirmation.token not in "\n".join(t.value for t in at.text)
     click(at, "취소")
     assert service.get_request(owner, r).data.request.status == "ready"
-    click(at, "구매요청 제출 확인")
+    click(at, "구매팀에 제출")
     at.selectbox(key="profile").select("employee_b")
     rerun(at)
     at.selectbox(key="profile").select("employee_a")
     rerun(at)
-    assert at.session_state["actor_sessions"]["employee_a"]["confirmation"] is None
-    click(at, "구매요청 제출 확인")
+    assert "submission" not in at.session_state["actor_sessions"]["employee_a"]
+    click(at, "구매팀에 제출")
     click(at, "제출")
     assert len(service.get_request(owner, r).data.history) == 1
     at.selectbox(key="profile").select("buyer_a")
     rerun(at)
     click(at, "열기")
-    next(s for s in at.selectbox if s.label == "처리 종류").select("reject")
-    rerun(at)
-    assert next(b for b in at.button if b.label == "처리 내용 확인").disabled
-    next(s for s in at.selectbox if s.label == "처리 종류").select("approve")
-    rerun(at)
-    click(at, "처리 내용 확인")
+    click(at, "반려")
+    assert next(b for b in at.button if b.label == "확인하여 처리").disabled
+    click(at, "처리 취소")
+    click(at, "승인")
+    assert any("추가 승인자" in i.value for i in at.info)
     click(at, "확인하여 처리")
     assert service.get_request(owner, r).data.request.status == "additional_approval"
     at.selectbox(key="profile").select("manager_a")
     rerun(at)
     click(at, "열기")
-    click(at, "처리 내용 확인")
+    click(at, "승인")
     click(at, "확인하여 처리")
     assert service.get_request(owner, r).data.request.status == "approved"
 
@@ -160,7 +159,7 @@ def test_edit_and_search_refresh_use_latest_version(tmp_path):
     r, owner = seed(service)
     at = run_app(service)
     click(at, "열기")
-    click(at, "구매 조건 보완")
+    click(at, "구매 조건 수정")
     next(t for t in at.text_area if t.label.startswith("구매 목적")).input("새 업무 목적")
     click(at, "구매 조건 저장")
     latest = service.get_latest_request(owner, r.request_id).data
@@ -173,7 +172,7 @@ def test_edit_and_search_refresh_use_latest_version(tmp_path):
     latest = service.get_latest_request(owner, r.request_id).data
     assert latest.request.version == r.version + 2
     assert next(s for s in at.selectbox if s.label == "조회 버전").value == latest.request.version
-    click(at, "문서 만들기 →")
+    click(at, "검토하고 문서 만들기 →")
     assert (
         service.get_latest_request(owner, r.request_id).data.review.version
         == latest.request.version
@@ -181,7 +180,7 @@ def test_edit_and_search_refresh_use_latest_version(tmp_path):
     next(s for s in at.selectbox if s.label == "조회 버전").select(r.version)
     rerun(at)
     assert any("읽기 전용" in w.value for w in at.warning)
-    assert not any(b.label == "문서 만들기 →" for b in at.button)
+    assert not any(b.label == "검토하고 문서 만들기 →" for b in at.button)
 
 
 def test_create_searches_and_shows_next_step(tmp_path):
@@ -189,11 +188,11 @@ def test_create_searches_and_shows_next_step(tmp_path):
     for evidence in service.catalog:
         evidence.query = "모니터"
     at = run_app(service)
-    click(at, "구매요청 작성")
-    assert any("① 구매 조건 · 현재 단계" in i.value for i in at.info)
+    click(at, "+ 새 구매요청")
+    assert any(t.proto.placeholder.startswith("예:") for t in at.text_area)
     click(at, "저장하고 상품 찾기")
-    assert any("② 상품 비교·선택 · 현재 단계" in i.value for i in at.info)
-    assert any(s.label == "구매 상품 선택" for s in at.selectbox)
+    assert any("step active" in m.value and "상품 선택" in m.value for m in at.markdown)
+    assert any(b.label == "이 상품 선택" for b in at.button)
     assert not at.tabs
     assert not any(t.label.startswith("구매 목적") for t in at.text_area)
     state = at.session_state["actor_sessions"]["employee_a"]
@@ -203,43 +202,36 @@ def test_create_searches_and_shows_next_step(tmp_path):
     assert len(detail.candidates) == 2
     assert detail.request.selected_evidence_id is None
     assert detail.request.submitted_at is None
-    next(s for s in at.selectbox if s.label == "구매 상품 선택").select("e1")
-    rerun(at)
-    click(at, "선택 상품 적용")
-    click(at, "문서 만들기 →")
-    assert any("③ 문서 확인·제출 · 현재 단계" in i.value for i in at.info)
-    assert not any(s.label == "구매 상품 선택" for s in at.selectbox)
+    click(at, "이 상품 선택")
+    click(at, "검토하고 문서 만들기 →")
+    assert any("step active" in m.value and "검토 및 제출" in m.value for m in at.markdown)
+    assert not any(b.label == "이 상품 선택" for b in at.button)
     click(at, "← 상품 선택")
-    assert any(s.label == "구매 상품 선택" for s in at.selectbox)
+    assert any(b.label == "이 상품 선택" for b in at.button)
     assert not at.tabs
 
 
-def test_new_purchase_resets_request_ai_state_and_rotates_create_id(tmp_path):
+def test_new_purchase_resets_draft_but_preserves_existing_conversation(tmp_path):
     service = service_with_products(tmp_path)
     at = run_app(service)
     state = at.session_state["actor_sessions"]["employee_a"]
     state.update(
-        agent="old-agent",
-        agent_result={"response": "old-result"},
-        chat_history=[("user", "이전 요청")],
+        draft_chat={"history": [("user", "저장 전 대화")]},
+        conversations={"old-request": {"history": [("user", "이전 요청")]}},
         request_id="old-request",
-        confirmation="old-confirmation",
-        decision="old-decision",
+        submission={"kind": "manual"},
+        decision={"decision": "approve"},
         phase=3,
-        notice="이전 알림",
-        search_notice="이전 검색 알림",
     )
     old_create_id = state["create_id"]
-
-    click(at, "구매요청 작성")
-
+    click(at, "+ 새 구매요청")
     assert state["view"] == "create"
     assert state["request_id"] is None
     assert state["create_id"] != old_create_id
-    for key in ("agent", "agent_result", "chat_history", "phase", "notice", "search_notice"):
-        assert key not in state
-    assert state["confirmation"] is None
-    assert state["decision"] is None
+    assert not state.get("draft_chat", {}).get("history")
+    assert state["conversations"]["old-request"]["history"] == [("user", "이전 요청")]
+    assert not state.get("submission")
+    assert not state.get("decision")
 
 
 def test_navigation_and_reopening_existing_request_preserve_ai_state(tmp_path):
@@ -248,19 +240,14 @@ def test_navigation_and_reopening_existing_request_preserve_ai_state(tmp_path):
     at = run_app(service)
     click(at, "열기")
     state = at.session_state["actor_sessions"]["employee_a"]
-    state.update(
-        agent="existing-agent",
-        agent_result={"response": "existing-result"},
-        chat_history=[("user", "계속할 요청")],
-    )
-
-    click(at, "내 요청함")
+    chat = state["conversations"][r.request_id]
+    chat.update(agent="existing-agent", history=[("user", "계속할 요청")])
+    click(at, "내 구매요청")
     click(at, "열기")
-
     assert state["request_id"] == r.request_id
-    assert state["agent"] == "existing-agent"
-    assert state["agent_result"] == {"response": "existing-result"}
-    assert state["chat_history"] == [("user", "계속할 요청")]
+    assert chat["agent"] == "existing-agent"
+    assert chat["history"] == [("user", "계속할 요청")]
+    assert any(t.value == "계속할 요청" for t in at.text)
 
 
 def test_price_preference_orders_visible_candidates(tmp_path):
@@ -271,5 +258,273 @@ def test_price_preference_orders_visible_candidates(tmp_path):
     at = run_app(service)
     click(at, "열기")
     click(at, "← 상품 선택")
-    selector = next(s for s in at.selectbox if s.label == "구매 상품 선택")
-    assert selector.options[0].startswith("Synthetic monitor 2")
+    products = [t.value for t in at.text if t.value.startswith("Synthetic monitor")]
+    assert products[0].startswith("Synthetic monitor 2")
+
+
+def test_stale_submission_cannot_submit_changed_document(tmp_path):
+    service = service_with_products(tmp_path)
+    r, owner = seed(service)
+    at = run_app(service)
+    click(at, "열기")
+    click(at, "구매팀에 제출")
+    service.update_request(
+        owner, r.request_id, RequestPatch(expected_version=r.version, quantity=2)
+    )
+    rerun(at)
+    assert next(b for b in at.button if b.label == "제출").disabled
+    assert any("바뀌었습니다" in w.value for w in at.warning)
+    assert service.get_latest_request(owner, r.request_id).data.request.status == "draft"
+    click(at, "취소")
+
+
+def test_revision_reason_and_requester_resume(tmp_path):
+    service = service_with_products(tmp_path)
+    r, owner = seed(service)
+    detail = service.get_request(owner, r).data
+    service.submit_request(
+        owner, service.prepare_submission(owner, r, detail.documents.bundle_id).data
+    )
+    at = run_app(service)
+    at.selectbox(key="profile").select("buyer_a")
+    rerun(at)
+    click(at, "열기")
+    assert not any(t.label == "AI 요청" for t in at.text_area)
+    click(at, "보완 요청")
+    assert next(b for b in at.button if b.label == "확인하여 처리").disabled
+    next(t for t in at.text_area if t.label == "처리 의견").input(
+        "사용 부서를 구체적으로 적어 주세요"
+    )
+    rerun(at)
+    click(at, "확인하여 처리")
+    at.selectbox(key="profile").select("employee_a")
+    rerun(at)
+    click(at, "열기")
+    assert any(t.value == "사용 부서를 구체적으로 적어 주세요" for t in at.text)
+    click(at, "구매 조건 보완")
+    next(t for t in at.text_area if t.label.startswith("구매 목적")).input("개발팀 신규 장비")
+    click(at, "구매 조건 저장")
+    click(at, "검토하고 문서 만들기 →")
+    click(at, "구매팀에 제출")
+    click(at, "제출")
+    latest = service.get_latest_request(owner, r.request_id).data
+    assert latest.request.status == "submitted"
+    assert latest.request.version == r.version + 1
+
+
+def test_ai_and_manual_share_confirmation_and_request_history(tmp_path):
+    from unittest.mock import patch
+
+    from langchain_core.messages import AIMessage
+    from test_agent import answer
+    from test_s0_langchain import ScriptModel
+
+    from purchase_agent.agent import AgentSession
+
+    service = service_with_products(tmp_path)
+    r, owner = seed(service)
+    at = run_app(service)
+    click(at, "열기")
+    state = at.session_state["actor_sessions"]["employee_a"]
+    docs = service.get_request(owner, r).data.documents
+    model = ScriptModel(
+        responses=[
+            AIMessage(
+                content="",
+                tool_calls=[
+                    {
+                        "name": "submit_purchase_request",
+                        "args": {
+                            "request_id": r.request_id,
+                            "version": r.version,
+                            "bundle_id": docs.bundle_id,
+                        },
+                        "id": "submit",
+                    }
+                ],
+            ),
+            answer(),
+        ]
+    )
+    chat = state["conversations"][r.request_id]
+    chat["agent"] = AgentSession(service, demo_context("employee_a", state["session_id"]), model)
+    with patch("purchase_agent.ui.chat.model_available", return_value=True):
+        rerun(at)
+        next(t for t in at.text_area if t.label == "AI 요청").input("제출해줘")
+        click(at, "AI에게 요청")
+        assert state["submission"]["kind"] == "ai"
+        assert service.get_request(owner, r).data.request.status == "ready"
+        click(at, "취소")
+        assert service.get_request(owner, r).data.request.status == "ready"
+        assert any("취소" in text for _, text in chat["history"])
+        click(at, "내 구매요청")
+        click(at, "열기")
+        assert any(t.value == "제출해줘" for t in at.text)
+        click(at, "구매팀에 제출")
+        assert state["submission"]["kind"] == "manual"
+        click(at, "제출")
+        assert service.get_request(owner, r).data.request.status == "submitted"
+
+
+def test_manual_version_change_resets_execution_keeps_chat(tmp_path):
+    service = service_with_products(tmp_path)
+    r, _ = seed(service)
+    at = run_app(service)
+    click(at, "열기")
+    chat = at.session_state["actor_sessions"]["employee_a"]["conversations"][r.request_id]
+    chat.update(agent="old execution", history=[("user", "기존 조건")])
+    click(at, "구매 조건 수정")
+    next(t for t in at.text_area if t.label.startswith("구매 목적")).input("변경된 목적")
+    click(at, "구매 조건 저장")
+    assert "agent" not in chat
+    assert chat["history"] == [("user", "기존 조건")]
+    click(at, "← 구매 조건")
+    assert next(t for t in at.text_area if t.label.startswith("구매 목적")).value == "변경된 목적"
+
+
+def test_ai_submission_approve_and_old_version_readonly(tmp_path):
+    from unittest.mock import patch
+
+    from langchain_core.messages import AIMessage
+    from test_agent import answer
+    from test_s0_langchain import ScriptModel
+
+    from purchase_agent.agent import AgentSession
+
+    service = service_with_products(tmp_path)
+    r, owner = seed(service)
+    at = run_app(service)
+    click(at, "열기")
+    state = at.session_state["actor_sessions"]["employee_a"]
+    docs = service.get_request(owner, r).data.documents
+    model = ScriptModel(
+        responses=[
+            AIMessage(
+                content="",
+                tool_calls=[
+                    {
+                        "name": "submit_purchase_request",
+                        "args": {
+                            "request_id": r.request_id,
+                            "version": r.version,
+                            "bundle_id": docs.bundle_id,
+                        },
+                        "id": "submit",
+                    }
+                ],
+            ),
+            answer(),
+        ]
+    )
+    state["conversations"][r.request_id]["agent"] = AgentSession(
+        service, demo_context("employee_a", state["session_id"]), model
+    )
+    with patch("purchase_agent.ui.chat.model_available", return_value=True):
+        rerun(at)
+        next(t for t in at.text_area if t.label == "AI 요청").input("제출해줘")
+        click(at, "AI에게 요청")
+        click(at, "제출")
+        assert service.get_request(owner, r).data.request.status == "submitted"
+        assert sum(e.decision == "submit" for e in service.get_request(owner, r).data.history) == 1
+        next(s for s in at.selectbox if s.label == "조회 버전").select(1)
+        rerun(at)
+        assert not any(t.label == "AI 요청" for t in at.text_area)
+        assert not any(b.label == "구매팀에 제출" for b in at.button)
+
+
+def test_ai_updates_existing_form_and_draft_creation_isolated(tmp_path):
+    from unittest.mock import patch
+
+    from langchain_core.messages import AIMessage
+    from test_agent import answer
+    from test_s0_langchain import ScriptModel
+
+    from purchase_agent.agent import AgentSession
+
+    service = service_with_products(tmp_path)
+    r, owner = seed(service)
+    at = run_app(service)
+    click(at, "열기")
+    click(at, "구매 조건 수정")
+    state = at.session_state["actor_sessions"]["employee_a"]
+    model = ScriptModel(
+        responses=[
+            AIMessage(
+                content="",
+                tool_calls=[
+                    {
+                        "name": "upsert_purchase_request",
+                        "args": {
+                            "request_id": r.request_id,
+                            "expected_version": r.version,
+                            "quantity": 2,
+                        },
+                        "id": "update",
+                    }
+                ],
+            ),
+            answer(request_id=r.request_id, version=r.version + 1),
+        ]
+    )
+    state["conversations"][r.request_id]["agent"] = AgentSession(
+        service, demo_context("employee_a", state["session_id"]), model
+    )
+    with patch("purchase_agent.ui.chat.model_available", return_value=True):
+        rerun(at)
+        next(t for t in at.text_area if t.label == "AI 요청").input("수량을 2대로 바꿔줘")
+        click(at, "AI에게 요청")
+        assert service.get_latest_request(owner, r.request_id).data.request.inputs.quantity == 2
+        click(at, "← 구매 조건")
+        assert next(n for n in at.number_input if n.label == "수량").value == 2
+        click(at, "+ 새 구매요청")
+        assert not any(t.value == "수량을 2대로 바꿔줘" for t in at.text)
+        new_model = ScriptModel(
+            responses=[
+                AIMessage(
+                    content="",
+                    tool_calls=[
+                        {
+                            "name": "upsert_purchase_request",
+                            "args": {
+                                "quantity": 1,
+                                "budget_krw": 500000,
+                                "purpose": "AI 신규 요청",
+                            },
+                            "id": "create",
+                        }
+                    ],
+                ),
+                answer(),
+            ]
+        )
+        state["draft_chat"]["agent"] = AgentSession(
+            service, demo_context("employee_a", state["session_id"]), new_model
+        )
+        next(t for t in at.text_area if t.label == "AI 요청").input(
+            "모니터 1대 50만원으로 새 요청 만들어줘"
+        )
+        click(at, "AI에게 요청")
+        new_id = state["request_id"]
+        assert new_id != r.request_id
+        assert (
+            state["conversations"][new_id]["history"][0][1]
+            == "모니터 1대 50만원으로 새 요청 만들어줘"
+        )
+        assert state["conversations"][r.request_id]["history"][0][1] == "수량을 2대로 바꿔줘"
+
+
+def test_recent_requests_and_user_text_are_displayed_safely(tmp_path):
+    service = service_with_products(tmp_path)
+    _, owner = seed(service)
+    purpose = "<img src=x onerror=alert(1)> **구매**"
+    latest = service.create_request(
+        owner, RequestInput(quantity=1, budget_krw=300000, purpose=purpose), "latest"
+    ).data
+    at = run_app(service)
+    click(at, "내 구매요청")
+    click(at, "열기")
+    state = at.session_state["actor_sessions"]["employee_a"]
+    assert state["request_id"] == latest.request_id
+    # Dynamic text must never be interpolated into trusted HTML without escaping.
+    assert not any("<img src=x" in m.value for m in at.markdown)
+    assert any(purpose == c.value for c in at.text)
