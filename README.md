@@ -2,7 +2,7 @@
 
 Task Automation for Supplier Knowledge
 
-사내 모니터 구매요청의 상품 비교, 배송비 포함 예산 검토, 문서3종 작성과 직원 제출·담당자 결재를 지원한다. 실제 OpenAI 모델을 사용하며 쿠팡 검색은 사용자 확인 상품2개로 만든 모의 API다. 실제 주문·결제는 하지 않는다.
+사내 모니터 구매요청의 상품 비교, 배송비 포함 예산 검토, 문서3종 작성과 직원 제출·담당자 결재를 지원한다. 실제 OpenAI 모델을 사용하며 쿠팡 검색은 사용자 확인 상품12개로 만든 모의 API다. 실제 주문·결제는 하지 않는다.
 
 ## 실행
 
@@ -20,7 +20,7 @@ http://127.0.0.1:8501/ 에서 구매 조건 → 상품 비교·선택 → 문서
 
 ## 구현
 
-- 단일 LangChain Agent, 7개 도구, 구조화 출력 및 최대1회 보정.
+- 단일 LangChain Agent, 8개 도구, 구조화 출력 및 최대1회 보정.
 - 모델6회·도구10회·실행60초 상한. 요약/보조 키 호출도 합산, 종속 도구는 순차 호출.
 - 검색만 요청하면 상품 선택·검토·문서 생성을 실행 경계에서도 차단.
 - 배송비 포함 총액, 50만원 이상 후보2개, 100만원 이상 구매 담당자→추가 승인자.
@@ -30,7 +30,7 @@ http://127.0.0.1:8501/ 에서 구매 조건 → 상품 비교·선택 → 문서
 - 대화별 InMemorySaver와 동의 기반 SQLite Store. 가격/사양 우선 정렬 및 간결/상세 표현 적용.
 - 구매요청서·상품 비교표·규정 검토 보고서에 동일 요청/버전/수량/단가/총액 포함.
 
-소스: purchase_agent/{agent,tools,middleware,model,preferences,memory}.py는 Agent 계층, workflow/storage/policy/documents는 업무 계층, ui/app.py는 화면 계층이다. 공통 계약은 schemas.py와 services.py다.
+소스: purchase_agent/{agent,tools,model,preferences,memory}.py는 Agent 계층, workflow/storage/policy/documents는 업무 계층, ui/app.py는 화면 계층이다. 공통 계약은 schemas.py와 services.py다.
 
 ## 검증
 
@@ -52,3 +52,11 @@ DB는 runtime/purchase.sqlite3. .env/runtime/.venv는 Git 제외 대상이다. m
 ## 코드 읽기와 개발
 
 [Agent 흐름 안내](docs/guides/AGENT_FLOW.md) 순서로 코드를 읽을 수 있다. 린트·포맷 설정과 `make check` 실행 방법은 [개발 도구 안내](docs/guides/DEVELOPMENT.md)를 참고한다.
+
+## 예산 없는 상품 탐색과 가드레일
+
+예산이 없어도 카탈로그를 먼저 검색하고 수량·목적을 대화에 보관한다. “우리 팀 예산”을 요청하면 소속 부서의 **실습용 모의 예산**을 적용한다. 정식 구매요청은 수량과 예산이 갖춰진 뒤 저장한다. 예산은 정적 자료이며 제출 시 잔액을 차감하지 않는다.
+
+실행 중에는 모델 판단·상품 검색·문서 생성 단계를 실시간으로 표시하고, 최종 답변은 서버 상태를 검증한 뒤 보여준다. 검증 전 모델 원문을 실시간으로 노출하지 않는다.
+
+입력·출력·실행 한도·도구 노출·접근 권한·제출 확인 검사는 `purchase_agent/guardrails/`에 모았다. [가드레일 구조와 읽기 순서](docs/guides/AGENT_FLOW.md#가드레일-모듈)를 참고한다.

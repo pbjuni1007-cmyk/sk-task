@@ -1,8 +1,8 @@
-"""Seven LLM tools, all bound to a server-owned session context."""
+"""Eight LLM tools, all bound to a server-owned session context."""
 
 from langchain_core.tools import tool
 
-from .schemas import RequestInput, RequestPatch, RequestRef, ToolResult
+from .schemas import DraftInput, RequestInput, RequestPatch, RequestRef, ToolResult
 
 
 class ToolStop(RuntimeError):
@@ -35,8 +35,9 @@ def build_tools(session):
         expected_version: int | None = None,
         clear_purpose: bool = False,
         clear_selection: bool = False,
+        use_department_budget: bool = False,
     ):
-        """Save monitor conditions. Creation requires integer quantity (1-20) and budget_krw. Purpose optional. Omit unchanged fields on updates, which require request_id and latest expected_version. Select only returned selected_evidence_id. Never supply price/actor/status."""
+        """Save monitor conditions. Partial quantity/purpose may be saved before budget is known; only complete conditions create a request. use_department_budget applies the server mock department limit only when the user requested team budget. Purpose optional. Omit unchanged fields on updates, which require request_id and latest expected_version. Select only returned selected_evidence_id. Never supply price/actor/status."""
         if session.search_only and (selected_evidence_id is not None or clear_selection):
             return failure("SEARCH_ONLY: selection changes require a separate user request")
         values = {
@@ -55,10 +56,61 @@ def build_tools(session):
         if clear_selection:
             values["selected_evidence_id"] = None
         try:
+            if use_department_budget:
+                if not session.department_budget_requested:
+                    return failure("DEPARTMENT_BUDGET_NOT_REQUESTED")
+                budget = service.get_department_budget(ctx)
+                if not budget.ok:
+                    return result(budget)
+                session.department_budget = budget.data
+                if budget_krw is None:
+                    values["budget_krw"] = budget.data["available_krw"]
             if request_id is None:
+                draft = DraftInput.model_validate(
+                    {
+                        **session.draft_inputs,
+                        **{k: v for k, v in values.items() if k != "selected_evidence_id"},
+                    }
+                )
+                session.draft_inputs = draft.model_dump(exclude_none=True)
+                missing = [k for k in ("quantity", "budget_krw") if getattr(draft, k) is None]
+                if missing:
+                    return result(
+                        ToolResult(
+                            ok=True,
+                            data={
+                                "draft": session.draft_inputs,
+                                "missing_fields": missing,
+                                "persisted": False,
+                            },
+                        )
+                    )
+                values = session.draft_inputs
                 value = service.create_request(
                     ctx, RequestInput.model_validate(values), session.action_id
                 )
+                if value.ok:
+                    created = value.data
+                    session.current_request = created.request_id
+                    if session.explored:
+                        found = service.search_products(
+                            ctx,
+                            ref(created.request_id, created.version),
+                            session.explored[0].query,
+                            10,
+                            sort_by=session.exploration_sort,
+                        )
+                        if not found.ok:
+                            return result(found)
+                    if selected_evidence_id is not None:
+                        value = service.update_request(
+                            ctx,
+                            created.request_id,
+                            RequestPatch(
+                                expected_version=created.version,
+                                selected_evidence_id=selected_evidence_id,
+                            ),
+                        )
             else:
                 value = service.update_request(
                     ctx,
@@ -83,13 +135,40 @@ def build_tools(session):
     # 2. 검색: 이후 선택에는 응답의 selected_evidence_id와 최신 version을 사용한다.
     @tool
     def search_coupang_products(
-        request_id: str, version: int, keyword: str, limit: int = 5, refresh: bool = False
+        keyword: str,
+        request_id: str | None = None,
+        version: int | None = None,
+        limit: int = 10,
+        refresh: bool = False,
+        sort_by: str = "relevance",
     ):
-        """Search mock Coupang data. Catalog can be unavailable; never invent products. Refresh can create a new request version: call get_request_status afterwards."""
+        """Search mock Coupang data even before a request exists. Use price_desc for highest-price preference, price_asc for lowest; sorting happens before limit. Without request_id this explores only, not a purchase request. Catalog can be unavailable; never invent products. Refresh can create a new request version: call get_request_status afterwards."""
         # This practice searches a monitor-only snapshot. Natural descriptions
         # such as '업무용 모니터' use its category; hard specs remain policy inputs.
         query = "모니터" if "모니터" in keyword else keyword
-        value = service.search_products(ctx, ref(request_id, version), query, limit, refresh)
+        if request_id is None:
+            value = service.explore_products(ctx, query, limit, sort_by)
+            if not value.ok:
+                raise ToolStop(value.error_code)
+            session.explored = value.data
+            session.exploration_sort = sort_by
+            session.search_completed = True
+            return result(
+                ToolResult(
+                    ok=True,
+                    data={
+                        "candidates": value.data,
+                        "persisted": False,
+                        "scope": "등록된 모의 카탈로그의 검색 후보",
+                        "draft": session.draft_inputs,
+                    },
+                )
+            )
+        if version is None:
+            return failure("VERSION_REQUIRED")
+        value = service.search_products(
+            ctx, ref(request_id, version), query, limit, refresh, sort_by
+        )
         if not value.ok:
             raise ToolStop(value.error_code)
         latest = service.get_latest_request(ctx, request_id)
@@ -165,6 +244,14 @@ def build_tools(session):
         return result(value)
 
     @tool
+    def get_department_budget():
+        """Read only the caller's mock department balance and per-request limit. Never infer another department's budget; this is a static practice snapshot, not live accounting. To apply use upsert with use_department_budget=true when user requested team budget."""
+        value = service.get_department_budget(ctx)
+        if value.ok:
+            session.department_budget = value.data
+        return result(value)
+
+    @tool
     def save_user_preferences(comparison_priority: str = "price", output_style: str = "concise"):
         """Save non-sensitive preferences only when the user checked consent in this UI event. priority: price/specification; style: concise/detailed."""
         return result(
@@ -183,4 +270,5 @@ def build_tools(session):
         submit_purchase_request,
         get_request_status,
         save_user_preferences,
+        get_department_budget,
     ]

@@ -5,6 +5,7 @@ import streamlit as st
 from purchase_agent.agent import AgentSession
 from purchase_agent.model import model_available
 from purchase_agent.ui.confirmations import remember_result
+from purchase_agent.ui.execution import execute
 from purchase_agent.ui.state import conversation, reset_execution, sync_version
 
 
@@ -16,6 +17,13 @@ def panel(service, context, state, detail=None):
     with st.container(key="ai_panel"):
         st.subheader("SK-TASK AI 도우미")
         st.caption("현재 요청의 조건을 정리하고 상품 비교와 문서 작성을 도와드립니다.")
+        session = chat.get("agent")
+        if session and getattr(session, "department_budget", None):
+            budget = session.department_budget
+            st.info(
+                f"실습용 {budget['department_name']} 예산 · 잔액 {budget['remaining_krw']:,}원 · 건별 한도 {budget['per_request_limit_krw']:,}원"
+            )
+            st.caption("고정된 모의 예산이며 실제 회계 잔액·지출 예약과 연결되지 않습니다.")
         for role, text in chat.get("history", [])[-10:]:
             with st.chat_message(role):
                 st.text(text)
@@ -37,7 +45,7 @@ def panel(service, context, state, detail=None):
             sent = st.form_submit_button("AI에게 요청", type="primary")
         if not sent or not text.strip():
             return
-        from purchase_agent.middleware import redact
+        from purchase_agent.guardrails.input import redact
 
         session = chat.get("agent")
         if session is None:
@@ -48,8 +56,13 @@ def panel(service, context, state, detail=None):
                 st.error("AI 연결 설정을 확인해 주세요.")
                 return
         chat.setdefault("history", []).append(("user", redact(text)))
-        with st.spinner("구매 조건과 업무 상태를 확인 중…"):
-            result = session.invoke(text, preference_consent=consent, request_id=request_id)
+        with st.chat_message("user"):
+            st.text(redact(text))
+        result = execute(
+            lambda events: session.invoke(
+                text, preference_consent=consent, request_id=request_id, on_event=events
+            )
+        )
         remember_result(chat, result)
         if session.current_request:
             latest = service.get_latest_request(context, session.current_request)

@@ -29,7 +29,12 @@ def make_model():
     os.environ["LANGSMITH_TRACING"] = "false"
     os.environ["LANGCHAIN_TRACING_V2"] = "false"
     return ChatOpenAI(
-        **settings, base_url="https://api.openai.com/v1", temperature=0, timeout=20, max_retries=0
+        **settings,
+        base_url="https://api.openai.com/v1",
+        temperature=0,
+        timeout=20,
+        max_retries=0,
+        stream_usage=True,
     )
 
 
@@ -46,4 +51,5 @@ def make_secondary_model():
         temperature=0,
         timeout=20,
         max_retries=0,
+        stream_usage=True,
     )

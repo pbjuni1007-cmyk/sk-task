@@ -163,7 +163,7 @@ def test_user_catalog_matches_source():
         "products"
     ]
     evidence = load_catalog()
-    assert len(evidence) == 2
+    assert len(evidence) == len(source) == 12
     for e, s in zip(evidence, source):
         assert e.product.productId == s["productId"] and e.product.productPrice == s["productPrice"]
         assert (

@@ -68,5 +68,360 @@
     "retrieved_at": "2026-09-10T09:31:31.602288Z",
     "fixture_version": "user-confirmed-2026-09-10-v1",
     "data_mode": "mock"
+  },
+  {
+    "evidence_id": "coupang-user-9181645570-95556086118-v1",
+    "product": {
+      "productId": 9181645570,
+      "productName": "쿠루이 22인치 FHD VA 120Hz 블루라이트 지원 광시야각 모니터",
+      "productPrice": 89800,
+      "productUrl": "https://www.coupang.com/vp/products/9181645570?itemId=28612684971&vendorItemId=95556086118",
+      "productImage": "https://thumbnail.coupangcdn.com/thumbnails/remote/657x657q90trim/image/vendor_inventory/image_audit/stage/manual/369a1d5e71ab6bee34eb35367d1fe5518789db931beac1ebbe98ee240fe1_1785460424740.png",
+      "isRocket": false,
+      "isFreeShipping": true,
+      "keyword": "모니터",
+      "rank": 3
+    },
+    "supplement": {
+      "product_id": 9181645570,
+      "item_id": "28612684971",
+      "vendor_item_id": "95556086118",
+      "option_label": "E2212H",
+      "verified_specs": [
+        "22인치",
+        "FHD",
+        "VA",
+        "120Hz",
+        "블루라이트"
+      ],
+      "shipping_rule": "free",
+      "fee_krw": 0,
+      "tiers": [],
+      "shipping_source_url": "https://www.coupang.com/vp/products/9181645570?itemId=28612684971&vendorItemId=95556086118",
+      "source_checked_at": "2026-09-11T01:42:14.071917+00:00",
+      "source_status": "verified"
+    },
+    "query": "모니터",
+    "retrieved_at": "2026-09-11T01:42:14.071917+00:00",
+    "fixture_version": "user-confirmed-2026-09-11-v1",
+    "data_mode": "mock"
+  },
+  {
+    "evidence_id": "coupang-user-8686571087-92214177209-v1",
+    "product": {
+      "productId": 8686571087,
+      "productName": "한성컴퓨터 FHD IPS 144Hz 게이밍 모니터",
+      "productPrice": 109000,
+      "productUrl": "https://www.coupang.com/vp/products/8686571087?itemId=25217770729&vendorItemId=92214177209",
+      "productImage": "https://thumbnail.coupangcdn.com/thumbnails/remote/657x657q90trim/image/retail/images/7572517752081-5645ded3-6e8c-4bac-9249-bde7310b3fc6.jpg",
+      "isRocket": false,
+      "isFreeShipping": true,
+      "keyword": "모니터",
+      "rank": 4
+    },
+    "supplement": {
+      "product_id": 8686571087,
+      "item_id": "25217770729",
+      "vendor_item_id": "92214177209",
+      "option_label": "TFG24F14P2",
+      "verified_specs": [
+        "FHD",
+        "IPS",
+        "144Hz"
+      ],
+      "shipping_rule": "free",
+      "fee_krw": 0,
+      "tiers": [],
+      "shipping_source_url": "https://www.coupang.com/vp/products/8686571087?itemId=25217770729&vendorItemId=92214177209",
+      "source_checked_at": "2026-09-11T01:42:14.071917+00:00",
+      "source_status": "verified"
+    },
+    "query": "모니터",
+    "retrieved_at": "2026-09-11T01:42:14.071917+00:00",
+    "fixture_version": "user-confirmed-2026-09-11-v1",
+    "data_mode": "mock"
+  },
+  {
+    "evidence_id": "coupang-user-7975403014-94105164028-v1",
+    "product": {
+      "productId": 7975403014,
+      "productName": "LG전자 WFHD 울트라와이드 모니터",
+      "productPrice": 208100,
+      "productUrl": "https://www.coupang.com/vp/products/7975403014?itemId=22106477480&vendorItemId=94105164028",
+      "productImage": "https://thumbnail.coupangcdn.com/thumbnails/remote/657x657q90trim/image/vendor_inventory/0747/6bbd39fb8e56b75ed3cd9c9a97e49ad36460cf13fa390426ac90141837c1.png",
+      "isRocket": false,
+      "isFreeShipping": true,
+      "keyword": "모니터",
+      "rank": 5
+    },
+    "supplement": {
+      "product_id": 7975403014,
+      "item_id": "22106477480",
+      "vendor_item_id": "94105164028",
+      "option_label": "34WP550",
+      "verified_specs": [
+        "WFHD",
+        "울트라와이드"
+      ],
+      "shipping_rule": "free",
+      "fee_krw": 0,
+      "tiers": [],
+      "shipping_source_url": "https://www.coupang.com/vp/products/7975403014?itemId=22106477480&vendorItemId=94105164028",
+      "source_checked_at": "2026-09-11T01:42:14.071917+00:00",
+      "source_status": "verified"
+    },
+    "query": "모니터",
+    "retrieved_at": "2026-09-11T01:42:14.071917+00:00",
+    "fixture_version": "user-confirmed-2026-09-11-v1",
+    "data_mode": "mock"
+  },
+  {
+    "evidence_id": "coupang-user-9570277602-95508230198-v1",
+    "product": {
+      "productId": 9570277602,
+      "productName": "LG전자 WQHD 울트라와이드 모니터",
+      "productPrice": 399000,
+      "productUrl": "https://www.coupang.com/vp/products/9570277602?itemId=28563700048&vendorItemId=95508230198",
+      "productImage": "https://thumbnail.coupangcdn.com/thumbnails/remote/657x657q90trim/image/retail/images/629219497547690-29d724b3-1890-4515-8a79-2af5701a9fc6.jpg",
+      "isRocket": false,
+      "isFreeShipping": true,
+      "keyword": "모니터",
+      "rank": 6
+    },
+    "supplement": {
+      "product_id": 9570277602,
+      "item_id": "28563700048",
+      "vendor_item_id": "95508230198",
+      "option_label": "34U620B",
+      "verified_specs": [
+        "WQHD",
+        "울트라와이드"
+      ],
+      "shipping_rule": "free",
+      "fee_krw": 0,
+      "tiers": [],
+      "shipping_source_url": "https://www.coupang.com/vp/products/9570277602?itemId=28563700048&vendorItemId=95508230198",
+      "source_checked_at": "2026-09-11T01:42:14.071917+00:00",
+      "source_status": "verified"
+    },
+    "query": "모니터",
+    "retrieved_at": "2026-09-11T01:42:14.071917+00:00",
+    "fixture_version": "user-confirmed-2026-09-11-v1",
+    "data_mode": "mock"
+  },
+  {
+    "evidence_id": "coupang-user-9609781078-95631277902-v1",
+    "product": {
+      "productId": 9609781078,
+      "productName": "한성컴퓨터 WQHD IPS 165Hz 울트라 와이드 게이밍 모니터",
+      "productPrice": 329000,
+      "productUrl": "https://www.coupang.com/vp/products/9609781078?itemId=28689917618&vendorItemId=95631277902",
+      "productImage": "https://thumbnail.coupangcdn.com/thumbnails/remote/657x657q90trim/image/retail/images/2026/06/18/16/8/ac901706-aba3-4635-9b77-9415483314ba.jpg",
+      "isRocket": false,
+      "isFreeShipping": true,
+      "keyword": "모니터",
+      "rank": 7
+    },
+    "supplement": {
+      "product_id": 9609781078,
+      "item_id": "28689917618",
+      "vendor_item_id": "95631277902",
+      "option_label": "TFG34Q16WP",
+      "verified_specs": [
+        "WQHD",
+        "IPS",
+        "165Hz",
+        "울트라와이드"
+      ],
+      "shipping_rule": "free",
+      "fee_krw": 0,
+      "tiers": [],
+      "shipping_source_url": "https://www.coupang.com/vp/products/9609781078?itemId=28689917618&vendorItemId=95631277902",
+      "source_checked_at": "2026-09-11T01:42:14.071917+00:00",
+      "source_status": "verified"
+    },
+    "query": "모니터",
+    "retrieved_at": "2026-09-11T01:42:14.071917+00:00",
+    "fixture_version": "user-confirmed-2026-09-11-v1",
+    "data_mode": "mock"
+  },
+  {
+    "evidence_id": "coupang-user-9684758814-95892151314-v1",
+    "product": {
+      "productId": 9684758814,
+      "productName": "큐빅스 이트로이 FHD 240Hz 1ms 게이밍 27인치 모니터 PC 컴퓨터모니터 와이드 벽걸이가능",
+      "productPrice": 149000,
+      "productUrl": "https://www.coupang.com/vp/products/9684758814?itemId=28962033071&vendorItemId=95892151314",
+      "productImage": "https://thumbnail.coupangcdn.com/thumbnails/remote/657x657q90trim/image/vendor_inventory/0d75/182f38946e164f5a704673ed7a0fca42163e62746ac283b79d9eba3bfc5d.jpg",
+      "isRocket": false,
+      "isFreeShipping": true,
+      "keyword": "모니터",
+      "rank": 8
+    },
+    "supplement": {
+      "product_id": 9684758814,
+      "item_id": "28962033071",
+      "vendor_item_id": "95892151314",
+      "option_label": "VSG271-240",
+      "verified_specs": [
+        "FHD",
+        "240Hz",
+        "1ms",
+        "27인치",
+        "벽걸이가능"
+      ],
+      "shipping_rule": "free",
+      "fee_krw": 0,
+      "tiers": [],
+      "shipping_source_url": "https://www.coupang.com/vp/products/9684758814?itemId=28962033071&vendorItemId=95892151314",
+      "source_checked_at": "2026-09-11T01:42:14.071917+00:00",
+      "source_status": "verified"
+    },
+    "query": "모니터",
+    "retrieved_at": "2026-09-11T01:42:14.071917+00:00",
+    "fixture_version": "user-confirmed-2026-09-11-v1",
+    "data_mode": "mock"
+  },
+  {
+    "evidence_id": "coupang-user-9368755746-94819583922-v1",
+    "product": {
+      "productId": 9368755746,
+      "productName": "벤큐 QHD 프리미엄 무결점 모니터",
+      "productPrice": 319000,
+      "productUrl": "https://www.coupang.com/vp/products/9368755746?itemId=27804136562&vendorItemId=94819583922",
+      "productImage": "https://thumbnail.coupangcdn.com/thumbnails/remote/657x657q90trim/image/rs_quotation_api/1dexznzu/42e53a2438f544b893144dca409e95b7.jpg",
+      "isRocket": false,
+      "isFreeShipping": true,
+      "keyword": "모니터",
+      "rank": 9
+    },
+    "supplement": {
+      "product_id": 9368755746,
+      "item_id": "27804136562",
+      "vendor_item_id": "94819583922",
+      "option_label": "EW270Q",
+      "verified_specs": [
+        "QHD",
+        "무결점"
+      ],
+      "shipping_rule": "free",
+      "fee_krw": 0,
+      "tiers": [],
+      "shipping_source_url": "https://www.coupang.com/vp/products/9368755746?itemId=27804136562&vendorItemId=94819583922",
+      "source_checked_at": "2026-09-11T01:42:14.071917+00:00",
+      "source_status": "verified"
+    },
+    "query": "모니터",
+    "retrieved_at": "2026-09-11T01:42:14.071917+00:00",
+    "fixture_version": "user-confirmed-2026-09-11-v1",
+    "data_mode": "mock"
+  },
+  {
+    "evidence_id": "coupang-user-3512529-88099569376-v1",
+    "product": {
+      "productId": 3512529,
+      "productName": "LG전자 60.4 cm Full-HD IPS 모니터",
+      "productPrice": 63350,
+      "productUrl": "https://www.coupang.com/vp/products/3512529?itemId=16167670&vendorItemId=88099569376",
+      "productImage": "https://thumbnail.coupangcdn.com/thumbnails/remote/657x657q90trim/image/vendor_inventory/9387/a1e772489c40b66bc9670d60c8d3dd7d115137802e95ce97d2cdb60e717a.jpg",
+      "isRocket": false,
+      "isFreeShipping": true,
+      "keyword": "모니터",
+      "rank": 10
+    },
+    "supplement": {
+      "product_id": 3512529,
+      "item_id": "16167670",
+      "vendor_item_id": "88099569376",
+      "option_label": "24MP58VQ",
+      "verified_specs": [
+        "Full-HD",
+        "IPS",
+        "60.4cm"
+      ],
+      "shipping_rule": "free",
+      "fee_krw": 0,
+      "tiers": [],
+      "shipping_source_url": "https://www.coupang.com/vp/products/3512529?itemId=16167670&vendorItemId=88099569376",
+      "source_checked_at": "2026-09-11T01:42:14.071917+00:00",
+      "source_status": "verified"
+    },
+    "query": "모니터",
+    "retrieved_at": "2026-09-11T01:42:14.071917+00:00",
+    "fixture_version": "user-confirmed-2026-09-11-v1",
+    "data_mode": "mock"
+  },
+  {
+    "evidence_id": "coupang-user-9700541026-95860687504-v1",
+    "product": {
+      "productId": 9700541026,
+      "productName": "주연테크 QHD 게이밍 LG IPS Black 144Hz HDR 무결점 모니터 68~69cm",
+      "productPrice": 179000,
+      "productUrl": "https://www.coupang.com/vp/products/9700541026?itemId=29018212652&vendorItemId=95860687504",
+      "productImage": "https://thumbnail.coupangcdn.com/thumbnails/remote/657x657q90trim/image/vendor_inventory/25b4/d473482b14ced1ddf668229083d4a945ebb5a378325d6354488b4427f2d9.jpg",
+      "isRocket": false,
+      "isFreeShipping": true,
+      "keyword": "모니터",
+      "rank": 11
+    },
+    "supplement": {
+      "product_id": 9700541026,
+      "item_id": "29018212652",
+      "vendor_item_id": "95860687504",
+      "option_label": "V27Q144",
+      "verified_specs": [
+        "QHD",
+        "IPS Black",
+        "144Hz",
+        "HDR",
+        "무결점",
+        "68~69cm"
+      ],
+      "shipping_rule": "free",
+      "fee_krw": 0,
+      "tiers": [],
+      "shipping_source_url": "https://www.coupang.com/vp/products/9700541026?itemId=29018212652&vendorItemId=95860687504",
+      "source_checked_at": "2026-09-11T01:42:14.071917+00:00",
+      "source_status": "verified"
+    },
+    "query": "모니터",
+    "retrieved_at": "2026-09-11T01:42:14.071917+00:00",
+    "fixture_version": "user-confirmed-2026-09-11-v1",
+    "data_mode": "mock"
+  },
+  {
+    "evidence_id": "coupang-user-8653047825-92655116404-v1",
+    "product": {
+      "productId": 8653047825,
+      "productName": "한성컴퓨터 FHD Fast IPS 240Hz 게이밍 모니터",
+      "productPrice": 139000,
+      "productUrl": "https://www.coupang.com/vp/products/8653047825?itemId=25665500784&vendorItemId=92655116404",
+      "productImage": "https://thumbnail.coupangcdn.com/thumbnails/remote/657x657q90trim/image/retail/images/118699003383761-05e86fda-7f2e-492c-a306-bafcea2ead8f.jpg",
+      "isRocket": false,
+      "isFreeShipping": true,
+      "keyword": "모니터",
+      "rank": 12
+    },
+    "supplement": {
+      "product_id": 8653047825,
+      "item_id": "25665500784",
+      "vendor_item_id": "92655116404",
+      "option_label": "TFG24F24P",
+      "verified_specs": [
+        "FHD",
+        "Fast IPS",
+        "240Hz"
+      ],
+      "shipping_rule": "free",
+      "fee_krw": 0,
+      "tiers": [],
+      "shipping_source_url": "https://www.coupang.com/vp/products/8653047825?itemId=25665500784&vendorItemId=92655116404",
+      "source_checked_at": "2026-09-11T01:42:14.071917+00:00",
+      "source_status": "verified"
+    },
+    "query": "모니터",
+    "retrieved_at": "2026-09-11T01:42:14.071917+00:00",
+    "fixture_version": "user-confirmed-2026-09-11-v1",
+    "data_mode": "mock"
   }
 ]

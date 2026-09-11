@@ -3,6 +3,7 @@
 import streamlit as st
 
 from purchase_agent.schemas import DecisionInput
+from purchase_agent.ui.execution import execute
 from purchase_agent.ui.presentation import ROLES, STATUS, money
 from purchase_agent.ui.state import clear_confirmations, conversation
 
@@ -45,7 +46,9 @@ def submission_dialog(service, context, state):
         if pending["kind"] == "ai":
             chat = conversation(state, pending["request_id"])
             if chat.get("agent") and chat.get("result", {}).get("pending"):
-                remember_result(chat, chat["agent"].resume(False))
+                remember_result(
+                    chat, execute(lambda events: chat["agent"].resume(False, on_event=events))
+                )
         clear_confirmations(state)
         st.rerun()
     if b.button("제출", key="confirm_submit", type="primary", disabled=not valid):
@@ -55,8 +58,7 @@ def submission_dialog(service, context, state):
             if agent is None or not chat.get("result", {}).get("pending"):
                 st.error("AI 확인 세션이 만료되었습니다. 창을 닫고 다시 제출해 주세요.")
                 return
-            with st.spinner("제출 처리 중…"):
-                remember_result(chat, agent.resume(True))
+            remember_result(chat, execute(lambda events: agent.resume(True, on_event=events)))
             latest = service.get_latest_request(context, pending["request_id"])
             success = latest.ok and latest.data.request.status == "submitted"
         else:

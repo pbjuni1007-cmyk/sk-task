@@ -14,6 +14,9 @@ class Stub:
     def bind_tools(self, *args, **kwargs):
         return self
 
+    def stream(self, *args, **kwargs):
+        yield self.invoke(*args, **kwargs)
+
     def invoke(self, *args, **kwargs):
         self.calls += 1
         if self.error:
@@ -75,3 +78,45 @@ def test_no_budget_for_backup():
     with pytest.raises(BudgetExceeded):
         BudgetModel(inner=a, secondary=b, budget=budget).invoke("test")
     assert b.calls == 0 and budget.models == 6
+
+
+def test_stream_chunks_arrive_before_completion_and_usage_counted_once():
+    from langchain_core.messages import AIMessageChunk
+
+    class StreamingStub(Stub):
+        def stream(self, *args, **kwargs):
+            yield AIMessageChunk(content="첫 ")
+            yield AIMessageChunk(
+                content="응답",
+                usage_metadata={"input_tokens": 3, "output_tokens": 2, "total_tokens": 5},
+            )
+
+    budget = CallBudget()
+    budget.reset()
+    events = []
+    budget.on_event = events.append
+    stream = BudgetModel(inner=StreamingStub(), budget=budget).stream("test")
+    assert next(stream).content == "첫 "
+    assert any(e["kind"] == "model_chunk" for e in events)
+    assert budget.tokens == 0
+    assert "".join(c.content for c in stream) == "응답"
+    assert budget.tokens == 5 and budget.models == 1
+    assert all("content" not in e for e in events)
+
+
+def test_stream_failure_after_first_chunk_never_retries_another_key():
+    from langchain_core.messages import AIMessageChunk
+
+    class PartialFailure(Stub):
+        def stream(self, *args, **kwargs):
+            yield AIMessageChunk(content="partial")
+            raise error(429)
+
+    budget = CallBudget()
+    budget.reset()
+    backup = Stub()
+    stream = BudgetModel(inner=PartialFailure(), secondary=backup, budget=budget).stream("test")
+    assert next(stream).content == "partial"
+    with pytest.raises(APIStatusError):
+        list(stream)
+    assert budget.models == 1 and backup.calls == 0

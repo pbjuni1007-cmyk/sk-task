@@ -9,6 +9,14 @@ from uuid import uuid4
 
 from . import documents, policy
 from .coupang_client import MockCoupangClient, RateWindow, SearchError
+from .errors import BusinessError
+from .guardrails.access import validate_access, validate_context
+from .guardrails.confirmation import (
+    validate_binding,
+    validate_fresh_token,
+    validate_ready,
+    validate_submission,
+)
 from .schemas import (
     ApprovalEvent,
     Confirmation,
@@ -26,10 +34,6 @@ from .schemas import (
 from .storage import Database
 
 
-class BusinessError(Exception):
-    pass
-
-
 def operation(fn):
     # UI와 Agent의 모든 업무 호출을 같은 권한 검사·DB 트랜잭션·오류 형식으로 감싼다.
     @wraps(fn)
@@ -37,14 +41,7 @@ def operation(fn):
         try:
             context = kwargs.get("context", args[0] if args else None)
             if context is not None:
-                from .config import DEMO_PROFILES
-
-                profile = DEMO_PROFILES.get(context.actor_id)
-                if profile != (
-                    context.department_id,
-                    context.role,
-                ) or not context.thread_id.startswith(context.actor_id + ":"):
-                    raise BusinessError("INVALID_CONTEXT")
+                validate_context(context)
             with self.db.transaction() as db:
                 return ToolResult(ok=True, data=fn(self, db, *args, **kwargs))
         except (BusinessError, ValueError, LookupError) as e:
@@ -69,10 +66,7 @@ class LocalPurchaseService:
         head = db.execute("SELECT * FROM requests WHERE id=?", (ref.request_id,)).fetchone()
         if not head:
             raise BusinessError("NOT_FOUND")
-        if head["owner"] != ctx.actor_id and (owner or ctx.role == "requester"):
-            raise BusinessError("FORBIDDEN")
-        if current and head["version"] != ref.version:
-            raise BusinessError("STALE_VERSION")
+        validate_access(ctx, head, ref, owner=owner, current=current)
         row = db.execute(
             "SELECT body FROM versions WHERE id=? AND version=?", (ref.request_id, ref.version)
         ).fetchone()
@@ -233,9 +227,24 @@ class LocalPurchaseService:
         return hashlib.sha256(json.dumps(bodies, sort_keys=True).encode()).hexdigest()
 
     @operation
-    def search_products(self, db, context, ref, keyword, limit=5, refresh=False):
+    def get_department_budget(self, db, context):
+        from .budgets import DEPARTMENT_BUDGETS
+
+        snapshot = dict(DEPARTMENT_BUDGETS[context.department_id])
+        snapshot.update(
+            department_id=context.department_id,
+            data_mode="mock",
+            available_krw=min(snapshot["remaining_krw"], snapshot["per_request_limit_krw"]),
+        )
+        return snapshot
+
+    @operation
+    def explore_products(self, db, context, keyword, limit=10, sort_by="relevance"):
+        """예산·요청번호 없이도 동일한 API 계약으로 후보를 탐색한다."""
+        return self._catalog_search(keyword, limit, False, sort_by)
+
+    def _catalog_search(self, keyword, limit, refresh, sort_by):
         query = CoupangSearchRequest(keyword=keyword, limit=limit)
-        d = self._get(db, context, ref, owner=True, current=True)
         if not self.catalog:
             raise BusinessError("CATALOG_NOT_VERIFIED")
         candidates = [
@@ -243,6 +252,12 @@ class LocalPurchaseService:
             for e in self.catalog
             if query.keyword.casefold() in (e.query + " " + e.product.productName).casefold()
         ]
+        if sort_by == "price_desc":
+            candidates.sort(key=lambda e: e.product.productPrice, reverse=True)
+        elif sort_by == "price_asc":
+            candidates.sort(key=lambda e: e.product.productPrice)
+        elif sort_by != "relevance":
+            raise BusinessError("INVALID_SORT")
         for e in candidates:
             e.query = query.keyword
             e.retrieved_at = datetime.now(timezone.utc)
@@ -269,6 +284,14 @@ class LocalPurchaseService:
             if index is None:
                 raise BusinessError("EVIDENCE_MISMATCH")
             candidates.append(remaining.pop(index))
+        return candidates
+
+    @operation
+    def search_products(
+        self, db, context, ref, keyword, limit=5, refresh=False, sort_by="relevance"
+    ):
+        d = self._get(db, context, ref, owner=True, current=True)
+        candidates = self._catalog_search(keyword, limit, refresh, sort_by)
         if not candidates:
             return []
         if self._evidence_hash(d.candidates) != self._evidence_hash(candidates):
@@ -344,15 +367,7 @@ class LocalPurchaseService:
     def prepare_submission(self, db, context, ref, bundle_id):
         # 화면에서 확인할 버전·문서 해시를 사용자와 대화에 묶어 제출 토큰을 발급한다.
         d = self._get(db, context, ref, owner=True, current=True)
-        if (
-            d.request.status != "ready"
-            or not d.review
-            or not d.review.can_submit
-            or not d.documents
-            or not d.documents.complete
-            or d.documents.bundle_id != bundle_id
-        ):
-            raise BusinessError("NOT_READY")
+        validate_ready(d, bundle_id)
         c = Confirmation(
             request_id=ref.request_id, version=ref.version, bundle_id=bundle_id, token=uuid4().hex
         )
@@ -378,49 +393,11 @@ class LocalPurchaseService:
         c = db.execute(
             "SELECT * FROM confirmations WHERE token=?", (confirmation.token,)
         ).fetchone()
-        if not c or any(
-            (
-                c["actor"] != context.actor_id,
-                c["thread"] != context.thread_id,
-                c["request_id"] != confirmation.request_id,
-                c["version"] != confirmation.version,
-                c["bundle"] != confirmation.bundle_id,
-            )
-        ):
-            raise BusinessError("CONFIRMATION_REQUIRED")
+        validate_binding(c, context, confirmation)
         if d.request.submitted_at and d.request.submitted_bundle_id == confirmation.bundle_id:
             return d.request
-        if c["boot"] != self.boot or c["consumed"]:
-            raise BusinessError("CONFIRMATION_EXPIRED")
-        if d.documents and d.review:
-            recalculated = policy.review(d.request, d.candidates)
-            compared = (
-                "subtotal_krw",
-                "shipping_fee_krw",
-                "review_total_krw",
-                "remaining_krw",
-                "policy_version",
-                "required_approvers",
-            )
-            if any(getattr(recalculated, k) != getattr(d.review, k) for k in compared):
-                raise BusinessError("STALE_REVIEW")
-            if documents.render(d).bundle_hash != d.documents.bundle_hash:
-                raise BusinessError("DOCUMENT_MISMATCH")
-            actual_hash = hashlib.sha256(
-                json.dumps(d.documents.files, sort_keys=True, ensure_ascii=False).encode()
-            ).hexdigest()
-            if actual_hash != d.documents.bundle_hash:
-                raise BusinessError("DOCUMENT_MISMATCH")
-        if (
-            d.request.status != "ready"
-            or not d.documents
-            or not d.documents.complete
-            or d.documents.bundle_id != c["bundle"]
-            or d.documents.bundle_hash != c["hash"]
-            or not d.review
-            or not policy.review(d.request, d.candidates).can_submit
-        ):
-            raise BusinessError("NOT_READY")
+        validate_fresh_token(c, self.boot)
+        validate_submission(d, c)
         d.request.status = "submitted"
         d.request.submitted_at = datetime.now(timezone.utc)
         d.request.submitted_bundle_id = confirmation.bundle_id

@@ -45,6 +45,15 @@ class RequestInput(Model):
         return value.strip() or None if isinstance(value, str) else value
 
 
+class DraftInput(Model):
+    """검색 전 수집 중인 조건. 정식 요청은 여전히 수량·예산이 필수다."""
+
+    quantity: Quantity | None = None
+    budget_krw: Positive | None = None
+    purpose: str | None = Field(default=None, max_length=500)
+    requirements: list[str] = Field(default_factory=list)
+
+
 class RequestPatch(Model):
     """Use model_dump(exclude_unset=True): omission keeps, explicit null clears."""
 

@@ -119,9 +119,26 @@ def create_screen(service, context, state):
     show_ai = st.toggle("AI 도우미", value=True, key="show_ai_create")
     columns = st.columns([7, 3], gap="large") if show_ai else [st.container()]
     with columns[0]:
+        draft_agent = state.get("draft_chat", {}).get("agent")
+        draft = draft_agent.draft_inputs if draft_agent else {}
+        if draft_agent and draft_agent.explored:
+            st.subheader("예산 설정 전 상품 탐색")
+            st.caption(
+                "등록된 모의 카탈로그의 검색 후보입니다. 구매요청은 아직 생성되지 않았습니다."
+            )
+            for evidence in draft_agent.explored:
+                with st.container(border=True):
+                    st.text(evidence.product.productName)
+                    st.text(f"단가 {money(evidence.product.productPrice)}")
+                    st.link_button("쿠팡 상품 보기", str(evidence.product.productUrl))
         values = inputs_form(
-            RequestInput(quantity=1, budget_krw=300000),
-            f"create_{state['create_id']}",
+            RequestInput(
+                quantity=draft.get("quantity", 1),
+                budget_krw=draft.get("budget_krw", 300000),
+                purpose=draft.get("purpose"),
+                requirements=draft.get("requirements", []),
+            ),
+            f"create_{state['create_id']}_{repr(draft)}",
             "저장하고 상품 찾기",
         )
         st.caption("구매 목적은 제출 전까지 입력하면 됩니다.")
