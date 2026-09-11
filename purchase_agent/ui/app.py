@@ -54,6 +54,16 @@ def move(state, view, request_id=None):
     st.rerun()
 
 
+def start_new_purchase(state):
+    """Start a fresh request attempt without changing profile-scoped state."""
+    for key in ('agent', 'agent_result', 'chat_history', 'notice', 'search_notice'):
+        state.pop(key, None)
+    # create_id is the idempotency key for one direct-create attempt. A new
+    # purchase must not reuse the previous attempt's key.
+    state['create_id'] = uuid4().hex
+    move(state, 'create')
+
+
 def inputs_form(inputs, key, submit_label='구매 조건 저장'):
     with st.form(key):
         a, b = st.columns(2)
@@ -391,7 +401,7 @@ def main(service=None):
     settings.caption(f'{context.department_id} · {ROLES[context.role]}')
     settings.info('로컬 시연 프로필입니다. 실제 로그인 기능이 아닙니다.')
     if st.sidebar.button('구매요청 작성', type='primary'):
-        move(state, 'create')
+        start_new_purchase(state)
     folders = ['mine', 'revision', 'completed'] if context.role == 'requester' else list(FOLDERS)
     for folder in folders:
         if st.sidebar.button(FOLDERS[folder], key=f'folder_{folder}'):

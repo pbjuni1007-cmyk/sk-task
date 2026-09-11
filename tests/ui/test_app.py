@@ -164,6 +164,56 @@ def test_create_searches_and_shows_next_step(tmp_path):
     assert any(s.label == '구매 상품 선택' for s in at.selectbox)
     assert not at.tabs
 
+
+def test_new_purchase_resets_request_ai_state_and_rotates_create_id(tmp_path):
+    service = service_with_products(tmp_path)
+    at = run_app(service)
+    state = at.session_state['actor_sessions']['employee_a']
+    state.update(
+        agent='old-agent',
+        agent_result={'response': 'old-result'},
+        chat_history=[('user', '이전 요청')],
+        request_id='old-request',
+        confirmation='old-confirmation',
+        decision='old-decision',
+        phase=3,
+        notice='이전 알림',
+        search_notice='이전 검색 알림',
+    )
+    old_create_id = state['create_id']
+
+    click(at, '구매요청 작성')
+
+    assert state['view'] == 'create'
+    assert state['request_id'] is None
+    assert state['create_id'] != old_create_id
+    for key in ('agent', 'agent_result', 'chat_history', 'phase', 'notice', 'search_notice'):
+        assert key not in state
+    assert state['confirmation'] is None
+    assert state['decision'] is None
+
+
+def test_navigation_and_reopening_existing_request_preserve_ai_state(tmp_path):
+    service = service_with_products(tmp_path)
+    r, _ = seed(service)
+    at = run_app(service)
+    click(at, '열기')
+    state = at.session_state['actor_sessions']['employee_a']
+    state.update(
+        agent='existing-agent',
+        agent_result={'response': 'existing-result'},
+        chat_history=[('user', '계속할 요청')],
+    )
+
+    click(at, '내 요청함')
+    click(at, '열기')
+
+    assert state['request_id'] == r.request_id
+    assert state['agent'] == 'existing-agent'
+    assert state['agent_result'] == {'response': 'existing-result'}
+    assert state['chat_history'] == [('user', '계속할 요청')]
+
+
 def test_price_preference_orders_visible_candidates(tmp_path):
     service=service_with_products(tmp_path)
     service.catalog[1].product.productPrice=200000
