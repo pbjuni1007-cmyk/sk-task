@@ -148,7 +148,9 @@ def test_third_document_failure_persists_no_partial_bundle(service,monkeypatch):
     def fail_on_review(value):
         if value=='목적·선택 상품·기본 입력 확인':raise ValueError('THIRD_DOCUMENT_RENDER_FAILED')
         return original(value)
-    ref,_,_=ready(service)
+    ref=service.create_request(OWNER,RequestInput(quantity=3,budget_krw=900000,purpose='개발 업무'),'third-document-failure').data
+    service.search_products(OWNER,ref,'monitor')
+    ref=service.update_request(OWNER,ref.request_id,RequestPatch(expected_version=ref.version,selected_evidence_id='e1')).data
     service.review_request(OWNER,ref)
     monkeypatch.setattr(documents,'safe',fail_on_review)
     assert not service.generate_documents(OWNER,ref).ok
