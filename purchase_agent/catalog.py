@@ -1,4 +1,4 @@
-"""Load explicitly prepared evidence. Missing catalog stays empty, never synthetic."""
+"""명시적으로 준비된 근거를 불러온다. 카탈로그가 없으면 빈 상태로 두고 가상 데이터를 만들지 않는다."""
 
 import json
 from pathlib import Path

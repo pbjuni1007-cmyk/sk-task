@@ -75,7 +75,7 @@ def validate_response(session, output):
             d.request.status != "submitted" or output.submitted_at != d.request.submitted_at
         ):
             raise ValueError("FALSE_SUBMISSION")
-        # Numeric statements are displayed by server-controlled UI, not unchecked prose.
+        # 수치 정보는 검증되지 않은 문장 대신 서버가 제어하는 UI에 표시한다.
         if output.status in ("documents_ready", "submitted", "candidates_ready"):
             output.message = {
                 "documents_ready": "문서 초안을 작성했습니다. 상세 화면에서 금액과 보완 사항을 확인하세요.",

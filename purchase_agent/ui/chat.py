@@ -67,7 +67,6 @@ def panel(service, context, state, detail=None):
         with history:
             with st.chat_message("user"):
                 st.text(redact(text))
-        with history:
             result = execute(
                 lambda events: session.invoke(
                     text, preference_consent=consent, request_id=request_id, on_event=events

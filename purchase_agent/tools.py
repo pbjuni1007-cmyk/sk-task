@@ -1,4 +1,4 @@
-"""Eight LLM tools, all bound to a server-owned session context."""
+"""서버가 관리하는 세션 컨텍스트에 모두 연결된 LLM 도구 8개."""
 
 from langchain_core.tools import tool
 
@@ -37,7 +37,7 @@ def build_tools(session):
         clear_selection: bool = False,
         use_department_budget: bool = False,
     ):
-        """Save monitor conditions. Partial quantity/purpose may be saved before budget is known; only complete conditions create a request. use_department_budget applies the server mock department limit only when the user requested team budget. Purpose optional. Omit unchanged fields on updates, which require request_id and latest expected_version. Select only returned selected_evidence_id. Never supply price/actor/status."""
+        """모니터 조건을 저장한다. 예산을 알기 전에도 수량/목적 일부를 저장할 수 있으며, 조건이 완성되어야 요청을 생성한다. use_department_budget은 사용자가 팀 예산을 요청한 경우에만 서버의 모의 부서 한도를 적용한다. 목적은 선택 사항이다. 수정 시에는 request_id와 최신 expected_version이 필요하며, 변경하지 않는 필드는 생략한다. 반환된 selected_evidence_id만 선택한다. 가격/사용자/상태는 절대 전달하지 않는다."""
         if session.search_only and (selected_evidence_id is not None or clear_selection):
             return failure("SEARCH_ONLY: selection changes require a separate user request")
         values = {
@@ -142,9 +142,9 @@ def build_tools(session):
         refresh: bool = False,
         sort_by: str = "relevance",
     ):
-        """Search mock Coupang data even before a request exists. Use price_desc for highest-price preference, price_asc for lowest; sorting happens before limit. Without request_id this explores only, not a purchase request. Catalog can be unavailable; never invent products. Refresh can create a new request version: call get_request_status afterwards."""
-        # This practice searches a monitor-only snapshot. Natural descriptions
-        # such as '업무용 모니터' use its category; hard specs remain policy inputs.
+        """요청이 생성되기 전에도 모의 Coupang 데이터를 검색한다. 높은 가격 우선이면 price_desc, 낮은 가격 우선이면 price_asc를 사용하며, limit 적용 전에 정렬한다. request_id가 없으면 후보만 탐색하며 구매요청을 생성하지 않는다. 카탈로그를 사용할 수 없을 수 있으므로 상품을 지어내지 않는다. 새로고침으로 요청의 새 버전이 생성될 수 있으므로 이후 get_request_status를 호출한다."""
+        # 이 실습은 모니터 전용 스냅샷을 검색한다. 자연어 설명은
+        # '업무용 모니터'처럼 해당 카테고리를 사용하며, 필수 사양은 정책 입력으로 유지한다.
         query = "모니터" if "모니터" in keyword else keyword
         if request_id is None:
             value = service.explore_products(ctx, query, limit, sort_by)
@@ -202,7 +202,7 @@ def build_tools(session):
     # 3. 검토: 금액·배송비·규정 판정은 모델 대신 업무 코드가 계산한다.
     @tool
     def review_purchase_request(request_id: str, version: int):
-        """Calculate shipping-inclusive total and policy checks from stored evidence. Missing purpose/shipping blocks submission but permits a draft."""
+        """저장된 근거로 배송비를 포함한 총액을 계산하고 정책을 검사한다. 목적/배송 정보가 없으면 제출은 차단하지만 초안은 허용한다."""
         if session.search_only:
             return failure("SEARCH_ONLY")
         return result(service.review_request(ctx, ref(request_id, version)))
@@ -210,7 +210,7 @@ def build_tools(session):
     # 4. 문서: 같은 요청 버전과 검토 결과로 문서 3종을 함께 생성한다.
     @tool
     def generate_documents(request_id: str, version: int):
-        """Generate three Markdown documents from the version's review. Call review first; no invented amount or purpose."""
+        """해당 버전의 검토 결과로 Markdown 문서 3종을 생성한다. 먼저 review를 호출하며, 금액이나 목적을 지어내지 않는다."""
         if session.search_only:
             return failure("SEARCH_ONLY")
         value = service.generate_documents(ctx, ref(request_id, version))
@@ -221,7 +221,7 @@ def build_tools(session):
     # 5. 제출: HITL 중단을 재개한 뒤 서버 발급 확인 토큰이 있어야 실행된다.
     @tool
     def submit_purchase_request(request_id: str, version: int, bundle_id: str):
-        """Propose internal submission of an existing ready bundle. Must interrupt and receive the user's explicit UI confirmation; never purchase or pay."""
+        """준비가 완료된 기존 문서 묶음의 내부 제출을 제안한다. 반드시 실행을 중단하고 UI에서 사용자의 명시적 확인을 받아야 하며, 구매나 결제는 절대 하지 않는다."""
         if not session.submission_requested:
             return failure("SUBMISSION_NOT_REQUESTED")
         confirmation = session.confirmation
@@ -237,7 +237,7 @@ def build_tools(session):
 
     @tool
     def get_request_status(request_id: str):
-        """Read authorized latest request, version, evidence, documents and approval history."""
+        """접근 권한이 있는 최신 요청, 버전, 근거, 문서와 승인 이력을 조회한다."""
         value = service.get_latest_request(ctx, request_id)
         if value.ok:
             session.current_request = request_id
@@ -245,7 +245,7 @@ def build_tools(session):
 
     @tool
     def get_department_budget():
-        """Read only the caller's mock department balance and per-request limit. Never infer another department's budget; this is a static practice snapshot, not live accounting. To apply use upsert with use_department_budget=true when user requested team budget."""
+        """호출자 소속 부서의 모의 잔액과 요청당 한도만 조회한다. 다른 부서의 예산을 추측하지 않는다. 이는 실시간 회계 정보가 아닌 실습용 고정 스냅샷이다. 사용자가 팀 예산을 요청했을 때 적용하려면 use_department_budget=true로 upsert를 사용한다."""
         value = service.get_department_budget(ctx)
         if value.ok:
             session.department_budget = value.data
@@ -253,7 +253,7 @@ def build_tools(session):
 
     @tool
     def save_user_preferences(comparison_priority: str = "price", output_style: str = "concise"):
-        """Save non-sensitive preferences only when the user checked consent in this UI event. priority: price/specification; style: concise/detailed."""
+        """이번 UI 이벤트에서 사용자가 동의에 체크한 경우에만 민감하지 않은 선호를 저장한다. priority 허용값: price/specification; style 허용값: concise/detailed."""
         return result(
             service.save_preferences(
                 ctx,

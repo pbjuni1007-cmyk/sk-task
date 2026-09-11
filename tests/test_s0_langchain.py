@@ -1,4 +1,4 @@
-"""Offline compatibility checks; not a real model quality/latency evaluation."""
+"""오프라인 호환성 검사. 실제 모델의 품질이나 지연 시간을 평가하지 않는다."""
 
 from typing import Any
 
@@ -38,7 +38,7 @@ def test_interrupt_before_tool_and_resume(decision, expected):
     calls = []
 
     def submit_purchase_request(request_id: str) -> str:
-        """Record an offline submission for compatibility testing only."""
+        """호환성 테스트만을 위해 오프라인 제출을 기록한다."""
         calls.append(request_id)
         return "recorded"
 
@@ -98,7 +98,7 @@ def test_structured_output_and_summary_constructor():
     graph = create_agent(model=model, response_format=ToolStrategy(PurchaseAssistantResponse))
     result = graph.invoke({"messages": [{"role": "user", "content": "start"}]})
     assert result["structured_response"].status == "needs_input"
-    # Constructor/import compatibility only; summarization behavior belongs to S4.
+    # 생성자/import 호환성만 검사하며, 요약 동작은 S4에서 다룬다.
     assert SummarizationMiddleware(
         model=ScriptModel(responses=[]), trigger=("messages", 20), keep=("messages", 6)
     )

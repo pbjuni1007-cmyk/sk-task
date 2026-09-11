@@ -1,4 +1,4 @@
-"""Authorized live-model dialogue smoke; isolated DB, user-confirmed catalog."""
+"""승인받은 실제 모델 대화 점검. 별도 DB와 사용자 확인 상품을 사용한다."""
 
 import hashlib
 import json

@@ -35,7 +35,7 @@ def test_budgetless_search_preserves_quantity_and_creates_no_request(service):
     assert result["response"].missing_fields == ["budget_krw"]
     assert "1대" in result["response"].message
     assert service.list_requests(OWNER, ListQuery(folder="mine")).data.total == 0
-    # A follow-up team-budget instruction may continue the earlier document intent.
+    # 후속 팀 예산 지시는 앞선 문서 생성 의도를 이어갈 수 있다.
     session.model.inner.responses.extend(
         [
             call("get_department_budget", {}, "budget"),

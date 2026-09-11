@@ -1,4 +1,4 @@
-"""One small authorized live request; print only safe metadata."""
+"""승인받은 소규모 실제 모델 호출 1회. 민감하지 않은 메타데이터만 출력한다."""
 
 import sys
 from pathlib import Path

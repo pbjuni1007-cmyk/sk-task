@@ -533,7 +533,7 @@ def test_recent_requests_and_user_text_are_displayed_safely(tmp_path):
     click(at, "열기")
     state = at.session_state["actor_sessions"]["employee_a"]
     assert state["request_id"] == latest.request_id
-    # Dynamic text must never be interpolated into trusted HTML without escaping.
+    # 동적 텍스트는 이스케이프 없이 신뢰할 수 있는 HTML에 삽입하지 않는다.
     assert not any("<img src=x" in m.value for m in at.markdown)
     assert any(purpose == c.value for c in at.text)
 

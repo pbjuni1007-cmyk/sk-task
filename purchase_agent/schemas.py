@@ -1,4 +1,4 @@
-"""Shared contract v1; API wire models never contain internal evidence metadata."""
+"""공통 계약 v1. API 전송 모델에는 내부 근거 메타데이터를 절대 포함하지 않는다."""
 
 from datetime import datetime
 from typing import Annotated, Generic, Literal, TypeVar
@@ -19,7 +19,7 @@ class Model(BaseModel):
 
 
 class ActorContext(Model):
-    """Construct from server profiles, never from model/UI role arguments."""
+    """모델/UI의 역할 인자가 아닌 서버 프로필로 생성한다."""
 
     actor_id: str
     department_id: str
@@ -55,7 +55,7 @@ class DraftInput(Model):
 
 
 class RequestPatch(Model):
-    """Use model_dump(exclude_unset=True): omission keeps, explicit null clears."""
+    """model_dump(exclude_unset=True)를 사용한다. 생략하면 유지하고 명시적인 null은 값을 지운다."""
 
     expected_version: Positive
     quantity: Quantity | None = None
@@ -233,7 +233,7 @@ class RequestPage(Model):
 
 
 class Confirmation(RequestRef):
-    """Opaque token for server/UI bridge only; never an LLM tool argument."""
+    """서버/UI 연결 전용의 불투명 토큰이며, LLM 도구 인자로 절대 사용하지 않는다."""
 
     token: str
     bundle_id: str

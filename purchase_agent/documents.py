@@ -1,4 +1,4 @@
-"""Render a single version into an atomic three-document bundle."""
+"""단일 버전을 분리할 수 없는 문서 3종 묶음으로 렌더링한다."""
 
 import hashlib
 import json

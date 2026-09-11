@@ -1,4 +1,4 @@
-"""S0 tests must never contact shopping, model or telemetry endpoints."""
+"""S0 테스트는 쇼핑, 모델 또는 원격 측정 엔드포인트에 절대 접속하지 않는다."""
 
 import os
 

@@ -1,4 +1,4 @@
-"""SQLite-backed LangGraph Store restricted to one server-owned actor namespace."""
+"""서버가 관리하는 단일 사용자 네임스페이스로 제한된 SQLite 기반 LangGraph Store."""
 
 from datetime import datetime, timezone
 
@@ -58,7 +58,7 @@ class PreferenceStore(BaseStore):
                 )
                 results.append(items[op.offset : op.offset + op.limit])
             elif isinstance(op, PutOp):
-                # Writes must use the consent-aware service, never generic model Store access.
+                # 쓰기는 반드시 동의를 확인하는 서비스를 사용하며, 모델의 일반 Store 접근으로 수행하지 않는다.
                 raise PermissionError("USE_CONSENT_SERVICE")
             else:
                 raise NotImplementedError("STORE_OPERATION")

@@ -1,4 +1,4 @@
-"""Business service. UI/LLM never bypass transaction, ownership or current-version gates."""
+"""업무 서비스. UI/LLM은 트랜잭션, 소유권 또는 현재 버전 검사를 우회할 수 없다."""
 
 import hashlib
 import json

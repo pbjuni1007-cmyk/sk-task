@@ -1,1 +1,1 @@
-"""Purchase copilot. Business services are implemented in S1–S3."""
+"""구매 보조 에이전트. 업무 서비스는 S1–S3에서 구현한다."""

@@ -8,7 +8,7 @@ extend-exclude = ["runtime"]
 select = ["E4", "E7", "E9", "F", "I"]
 
 [tool.ruff.lint.per-file-ignores]
-# CLI scripts add the repository root to sys.path before importing the app.
+# CLI 스크립트는 앱을 가져오기 전에 저장소 루트를 sys.path에 추가한다.
 "scripts/*.py" = ["E402"]
 
 [tool.ruff.format]

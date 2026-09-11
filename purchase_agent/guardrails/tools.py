@@ -4,7 +4,7 @@ from langchain.agents.middleware import AgentMiddleware
 
 
 class WorkflowToolsMiddleware(AgentMiddleware):
-    """Only expose tools whose business prerequisites exist at this model step."""
+    """현재 모델 단계에서 업무 선행 조건이 충족된 도구만 노출한다."""
 
     def __init__(self, session):
         self.session = session
@@ -33,7 +33,6 @@ class WorkflowToolsMiddleware(AgentMiddleware):
             if current.ok:
                 d = current.data
                 allowed.add("get_request_status")
-                allowed.add("search_coupang_products")
                 if d.request.selected_evidence_id:
                     allowed.add("review_purchase_request")
                     if d.review:

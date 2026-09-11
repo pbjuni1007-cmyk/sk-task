@@ -1,4 +1,4 @@
-"""Explicitly authorized live model evaluation with labeled synthetic shopping data."""
+"""명시적으로 승인받은 실제 모델 평가. 합성 쇼핑 데이터를 구분해 사용한다."""
 
 import argparse
 import hashlib

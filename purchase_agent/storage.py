@@ -1,4 +1,4 @@
-"""SQLite owns business state. Every service mutation uses BEGIN IMMEDIATE."""
+"""업무 상태는 SQLite가 관리한다. 모든 서비스 변경은 BEGIN IMMEDIATE를 사용한다."""
 
 import sqlite3
 from contextlib import contextmanager

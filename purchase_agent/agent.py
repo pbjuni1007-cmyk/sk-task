@@ -1,4 +1,4 @@
-"""SK-TASK single Agent session; one instance per actor/thread, never shared across users."""
+"""SK-TASK 단일 Agent 세션. 사용자/대화별 인스턴스를 하나씩 만들며 사용자 간에 공유하지 않는다."""
 
 import json
 import logging
@@ -149,8 +149,8 @@ class AgentSession:
             output = result.get("structured_response")
             if output is None:
                 raise ValueError("MISSING_STRUCTURED_OUTPUT")
-            # A completed server operation owns its IDs/status, not the model's
-            # transcription of long identifiers in its final response.
+            # 완료된 서버 작업의 ID/상태는 서버 결과를 기준으로 하며, 모델이
+            # 최종 응답에 옮겨 적은 긴 식별자를 기준으로 삼지 않는다.
             if self.current_request and (
                 self.document_generated or (self.search_only and self.search_completed)
             ):
@@ -220,7 +220,7 @@ class AgentSession:
             )
             return {"response": output, "metrics": self.budget.metrics()}
         except Exception as error:
-            # No exception text is shown: provider errors can include sensitive payloads.
+            # 공급자 오류에는 민감한 데이터가 포함될 수 있으므로 예외 원문은 표시하지 않는다.
             self.pending = None
             self.confirmation = None
             self._build_graph()

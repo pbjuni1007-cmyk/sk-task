@@ -1,4 +1,4 @@
-"""Offline defaults. Selecting a profile is a demo feature, not authentication."""
+"""오프라인 기본 설정. 프로필 선택은 인증이 아닌 데모 기능이다."""
 
 from .schemas import ActorContext
 

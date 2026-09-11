@@ -1,4 +1,4 @@
-"""Authorized real-model + tool smoke, no shopping API call or real submission."""
+"""승인받은 실제 모델·도구 연결 점검. 쇼핑 API 호출이나 실제 제출은 하지 않는다."""
 
 import sys
 import tempfile

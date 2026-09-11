@@ -1,4 +1,4 @@
-"""Offline transport with bounded retry, cache, and shared per-key rate window."""
+"""재시도 횟수 제한, 캐시, 키별 공유 호출 제한 구간을 제공하는 오프라인 전송 계층."""
 
 from collections import defaultdict, deque
 from threading import Lock
@@ -32,7 +32,7 @@ class RateWindow:
 
 
 class MockCoupangClient:
-    """Explicit snapshots only. Error scripts are for deterministic tests."""
+    """명시적인 스냅샷만 사용한다. 오류 시나리오는 결과가 일정한 테스트를 위한 것이다."""
 
     def __init__(self, fixtures, *, rate_window=None, key="mock", clock=monotonic, errors=()):
         self._fixtures = {k: v.model_copy(deep=True) for k, v in fixtures.items()}

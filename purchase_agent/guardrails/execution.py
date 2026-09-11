@@ -1,4 +1,4 @@
-"""Budgets cover main calls, summary calls and structured-output repair."""
+"""실행 한도는 일반 호출, 요약 호출과 구조화된 출력 복구에 모두 적용한다."""
 
 from time import monotonic
 from typing import Any

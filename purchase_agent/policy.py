@@ -1,4 +1,4 @@
-"""Deterministic policy: no model-provided price, shipping or approval decisions."""
+"""결과가 일정한 정책: 모델이 제공한 가격, 배송비 또는 승인 결정을 사용하지 않는다."""
 
 from uuid import uuid4
 
@@ -27,7 +27,7 @@ def shipping_total(s: ProductSupplement, quantity: int) -> int | None:
 
 
 def eligible(e: ProductEvidence, requirements: list[str], quantity: int) -> bool:
-    # Hard constraints require explicit catalog evidence, not an LLM inference.
+    # 필수 제약에는 LLM의 추론이 아닌 명시적인 카탈로그 근거가 필요하다.
     return shipping_total(e.supplement, quantity) is not None and all(
         r.strip().casefold() in {fact.strip().casefold() for fact in e.supplement.verified_specs}
         for r in requirements

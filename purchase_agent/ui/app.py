@@ -44,7 +44,7 @@ ERRORS = {
 
 @st.cache_resource
 def get_service(path):
-    """One service boot identity across reruns and sessions for this DB path."""
+    """이 DB 경로에서는 재실행과 세션에 걸쳐 하나의 서비스 시작 식별자를 사용한다."""
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     return LocalPurchaseService(path, catalog=load_catalog(ROOT / "fixtures/coupang"))
 
@@ -280,7 +280,7 @@ def candidates_screen(service, context, state, detail):
                         service.search_products(context, ref_of(r), keyword, refresh=refresh)
                     )
                 if found is not None:
-                    # Search may have created a version; never reuse the displayed ref.
+                    # 검색으로 새 버전이 생성되었을 수 있으므로 화면에 표시된 ref를 재사용하지 않는다.
                     latest = result_data(service.get_latest_request(context, r.request_id))
                     if latest:
                         clear_confirmations(state)
@@ -641,7 +641,7 @@ def main(service=None):
     style()
     st.sidebar.title("SK-TASK")
     st.sidebar.caption("Task Automation for Supplier Knowledge")
-    # Place settings below navigation, but resolve the active actor before rendering actions.
+    # 설정은 탐색 메뉴 아래에 배치하되, 동작 UI를 렌더링하기 전에 현재 사용자를 확정한다.
     navigation = st.sidebar.container()
     settings = st.sidebar.expander("시연 설정")
     profile = settings.selectbox(

@@ -1,4 +1,4 @@
-"""One presentation order for tools, structured responses, and candidate UI."""
+"""도구, 구조화된 응답, 후보 UI에 공통으로 적용하는 표시 순서."""
 
 from .policy import eligible, shipping_total
 

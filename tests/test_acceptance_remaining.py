@@ -1,4 +1,4 @@
-"""Remaining integration boundaries from the approved 38-case acceptance list."""
+"""승인된 38개 인수 테스트 목록에서 남은 통합 경계."""
 
 import pytest
 from langchain_core.messages import AIMessage

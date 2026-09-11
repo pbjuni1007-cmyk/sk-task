@@ -1,4 +1,4 @@
-"""Explicit synthetic fixtures for live-model evaluation, never shipped as catalog."""
+"""실제 모델 평가용으로 명시적으로 만든 가상 테스트 데이터이며, 카탈로그로 배포하지 않는다."""
 
 from datetime import datetime, timezone
 
