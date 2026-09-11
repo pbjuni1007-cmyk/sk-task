@@ -134,3 +134,60 @@ div[class*="st-key-paper_"] {
     position: static;
   }
 }
+
+/* 상품 선택과 다음 행동은 카탈로그 길이에 관계없이 찾을 수 있게 한다. */
+div[class*="st-key-product_"][class*="_selected"] {
+  border: 2px solid var(--accent);
+  background: #edf7f1;
+}
+div[class*="st-key-product_"] button[kind="primary"] {
+  min-height: 48px;
+  font-size: 16px;
+  font-weight: 700;
+}
+.st-key-selection_footer {
+  background: #fff;
+  padding: 16px;
+  border: 1px solid var(--line);
+  box-shadow: 0 -4px 16px #24324712;
+}
+@media (min-width: 801px) {
+  /* 고정 대상은 컨테이너가 아닌 Streamlit 래퍼여야 한다. */
+  [data-testid="stLayoutWrapper"]:has(> .st-key-selection_footer),
+  [data-testid="stLayoutWrapper"]:has(> .st-key-action_footer) {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+  }
+  .st-key-action_footer {
+    position: static;
+  }
+  [data-testid="stColumn"]:has(.st-key-ai_panel) {
+    position: sticky;
+    top: 4rem;
+    align-self: flex-start;
+  }
+  .st-key-ai_panel {
+    flex: none;
+    height: min(720px, calc(100dvh - 5rem));
+    overflow: hidden;
+  }
+  .st-key-ai_panel h3 {
+    font-size: 20px;
+  }
+  .st-key-ai_panel > * {
+    flex-shrink: 0;
+  }
+  .st-key-ai_panel > [data-testid="stLayoutWrapper"]:has(.st-key-ai_history) {
+    flex: 1;
+    min-height: 80px;
+  }
+  .st-key-ai_history {
+    height: 100% !important;
+  }
+}
+@media (max-width: 800px) {
+  .st-key-ai_panel {
+    padding: 12px;
+  }
+}

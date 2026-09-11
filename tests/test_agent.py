@@ -219,3 +219,22 @@ def test_unverified_prose_never_reaches_chat(service, status, has_request):
     assert forged not in result.message and "100원" not in result.message
     assert result.warnings == ["쇼핑 API 모의 데이터"]
     assert "제출을 완료" not in result.message
+
+
+@pytest.mark.parametrize(
+    "reason,expected",
+    [("STALE_OUTPUT", "STALE_OUTPUT"), ("secret-provider-payload", "PROCESSING_ERROR")],
+)
+def test_error_diagnostics_keep_safe_code_without_payload(service, caplog, reason, expected):
+    session = AgentSession(service, OWNER, ScriptModel(responses=[]))
+
+    class FailedGraph:
+        def invoke(self, *args):
+            raise ValueError(reason)
+
+    session.graph = FailedGraph()
+    result = session.invoke("제출해줘")
+    assert expected in result["response"].message
+    assert "문의 번호" in result["response"].message
+    assert f"code={expected}" in caplog.text
+    assert "secret-provider-payload" not in caplog.text + result["response"].message

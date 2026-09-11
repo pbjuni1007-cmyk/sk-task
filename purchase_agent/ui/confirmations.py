@@ -97,7 +97,7 @@ def decision_dialog(service, context, state):
         st.warning("요청이 변경되었거나 이미 처리되었습니다. 최신 요청을 다시 열어 주세요.")
     reason = st.text_area(
         "처리 의견",
-        placeholder="보완이 필요한 내용이나 반려 사유를 적어 주세요.",
+        placeholder="승인 / 보완 / 반려 사유를 입력해주세요",
         key=f"reason_{pending['request_id']}_{pending['version']}_{pending['decision']}",
         max_chars=1000,
     )
@@ -109,7 +109,10 @@ def decision_dialog(service, context, state):
         state.pop("decision", None)
         st.rerun()
     if b.button(
-        "확인하여 처리", type="primary", disabled=not valid or (required and not reason.strip())
+        names[pending["decision"]],
+        key="confirm_decision",
+        type="primary",
+        disabled=not valid or (required and not reason.strip()),
     ):
         result = service.decide(context, DecisionInput(**pending, reason=reason.strip() or None))
         if result.ok:

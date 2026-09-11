@@ -5,7 +5,7 @@ import streamlit as st
 from purchase_agent.agent import AgentSession
 from purchase_agent.model import model_available
 from purchase_agent.ui.confirmations import remember_result
-from purchase_agent.ui.execution import execute
+from purchase_agent.ui.execution import LABELS, execute
 from purchase_agent.ui.state import conversation, reset_execution, sync_version
 
 
@@ -21,12 +21,22 @@ def panel(service, context, state, detail=None):
         if session and getattr(session, "department_budget", None):
             budget = session.department_budget
             st.info(
-                f"실습용 {budget['department_name']} 예산 · 잔액 {budget['remaining_krw']:,}원 · 건별 한도 {budget['per_request_limit_krw']:,}원"
+                f"{budget['department_name']} 예산 · 잔액 {budget['remaining_krw']:,}원 · 건별 한도 {budget['per_request_limit_krw']:,}원"
             )
             st.caption("고정된 모의 예산이며 실제 회계 잔액·지출 예약과 연결되지 않습니다.")
-        for role, text in chat.get("history", [])[-10:]:
-            with st.chat_message(role):
-                st.text(text)
+        history = st.container(height=300, key="ai_history", autoscroll=True)
+        with history:
+            for role, text in chat.get("history", []):
+                with st.chat_message(role):
+                    st.text(text)
+            calls = getattr(getattr(session, "budget", None), "tool_results", [])
+            if calls:
+                with st.expander("최근 실행 내역"):
+                    for call in calls:
+                        label = LABELS.get(call["tool"], "업무 처리")
+                        outcome = "완료" if not call["error_code"] else "확인 필요"
+                        st.text(f"{label} · {outcome}")
+                        st.caption(call["tool"])
         if not model_available():
             st.info("AI 연결이 설정되지 않았습니다. 왼쪽 양식으로 요청을 진행할 수 있습니다.")
             return
@@ -56,13 +66,15 @@ def panel(service, context, state, detail=None):
                 st.error("AI 연결 설정을 확인해 주세요.")
                 return
         chat.setdefault("history", []).append(("user", redact(text)))
-        with st.chat_message("user"):
-            st.text(redact(text))
-        result = execute(
-            lambda events: session.invoke(
-                text, preference_consent=consent, request_id=request_id, on_event=events
+        with history:
+            with st.chat_message("user"):
+                st.text(redact(text))
+        with history:
+            result = execute(
+                lambda events: session.invoke(
+                    text, preference_consent=consent, request_id=request_id, on_event=events
+                )
             )
-        )
         remember_result(chat, result)
         if session.current_request:
             latest = service.get_latest_request(context, session.current_request)

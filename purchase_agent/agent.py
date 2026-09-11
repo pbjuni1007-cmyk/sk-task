@@ -1,6 +1,7 @@
 """SK-TASK single Agent session; one instance per actor/thread, never shared across users."""
 
 import json
+import logging
 import re
 from threading import Lock
 from uuid import uuid4
@@ -223,10 +224,36 @@ class AgentSession:
             self.pending = None
             self.confirmation = None
             self._build_graph()
+            # 오류 원문에는 외부 응답·키가 포함될 수 있어 허용한 코드만 기록한다.
+            known = {
+                "INVALID_CONFIRMATION",
+                "SUBMISSION_NOT_REQUESTED",
+                "NOT_READY",
+                "MISSING_STRUCTURED_OUTPUT",
+                "UNGROUNDED_OUTPUT",
+                "STALE_OUTPUT",
+                "UNKNOWN_PRODUCT",
+                "UNGROUNDED_REVIEW",
+                "UNGROUNDED_DOCUMENT",
+                "FALSE_DOCUMENT_COMPLETION",
+                "FALSE_CANDIDATES",
+                "FALSE_SUBMISSION",
+                "TIME_LIMIT",
+                "MODEL_LIMIT",
+                "TOOL_LIMIT",
+                "OUTPUT_REPAIR_LIMIT",
+            }
+            code = str(error) if str(error) in known else "PROCESSING_ERROR"
+            reference = uuid4().hex[:8]
+            logging.getLogger(__name__).warning(
+                "agent_failure reference=%s code=%s exception=%s",
+                reference,
+                code,
+                type(error).__name__,
+            )
             return self._failed(
-                "실행 한도 또는 처리 오류입니다. 최신 요청 상태를 확인해 주세요. ("
-                + type(error).__name__
-                + ")"
+                "AI 처리 결과를 확인하지 못했습니다. 요청 상세의 최신 상태를 확인해 주세요. "
+                f"(오류 코드: {code} · 문의 번호: {reference})"
             )
         finally:
             self.events.append(self.budget.metrics())

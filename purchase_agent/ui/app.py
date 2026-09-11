@@ -4,6 +4,7 @@ import os
 from datetime import datetime, time, timezone
 from pathlib import Path
 from uuid import uuid4
+from zoneinfo import ZoneInfo
 
 import streamlit as st
 
@@ -323,8 +324,14 @@ def candidates_screen(service, context, state, detail):
         sellers = {
             r["productId"]: r["seller"] for r in json.loads(source_path.read_text())["products"]
         }
+    st.info("구매할 상품을 하나 선택하세요. 선택 후 아래 고정 영역에서 문서를 만들 수 있습니다.")
     for e, row in zip(detail.candidates, rows):
-        with st.container(border=True):
+        selected = r.selected_evidence_id == e.evidence_id
+        with st.container(
+            border=True, key=f"product_{e.evidence_id}_{'selected' if selected else 'option'}"
+        ):
+            if selected:
+                st.success("✓ 선택한 상품")
             picture, info, choose = st.columns([1, 3, 2])
             picture.image(str(e.product.productImage), width=120)
             info.text(e.product.productName)
@@ -335,9 +342,10 @@ def candidates_screen(service, context, state, detail):
             selected = r.selected_evidence_id == e.evidence_id
             if "update" in detail.allowed_actions and choose.button(
                 "선택됨" if selected else "이 상품 선택",
-                key=f"choose_{r.request_id}_{r.version}_{e.evidence_id}",
+                key=f"choose_{r.request_id}_{e.evidence_id}",
                 disabled=selected,
-                type="primary" if selected else "secondary",
+                type="primary",
+                width="stretch",
             ):
                 updated = result_data(
                     service.update_request(
@@ -350,6 +358,9 @@ def candidates_screen(service, context, state, detail):
                 )
                 if updated:
                     clear_confirmations(state)
+                    state["notice"] = (
+                        "상품을 선택했습니다. 선택 상품과 총액을 확인한 뒤 문서를 만들어 주세요."
+                    )
                     st.rerun()
             with st.expander("가격·사양 상세"):
                 st.text(f"단가 {row['단가']} · 수량별 배송비 {row['수량별 배송비']}")
@@ -363,10 +374,10 @@ def document_tabs(service, context, detail):
     for tab, (kind, label) in zip(tabs, DOCS.items()):
         with tab:
             if detail.documents and kind in detail.documents.files:
-                # Plain text keeps both product text and generated Markdown inert.
+                # 저장 본문은 HTML 실행 없이 Markdown으로 읽는다.
                 document_preview(detail, kind)
-                with st.expander("저장된 문서 원문"):
-                    st.text(detail.documents.files[kind])
+                with st.expander("저장된 문서 보기"):
+                    st.markdown(detail.documents.files[kind], unsafe_allow_html=False)
                 data = result_data(service.download_document(context, ref_of(r), kind))
                 if data is not None:
                     st.download_button(
@@ -389,9 +400,21 @@ def document_tabs(service, context, detail):
             if not detail.history:
                 st.info("이 버전의 결재 이력이 없습니다.")
             for event in detail.history:
-                st.text(
-                    f"{event.created_at.isoformat(timespec='minutes')} · {event.actor_id} · {event.decision} · {event.reason or '—'}"
+                decision = {
+                    "submit": "구매요청 제출",
+                    "approve": "승인",
+                    "reject": "반려",
+                    "request_revision": "보완 요청",
+                }[event.decision]
+                date = event.created_at.astimezone(ZoneInfo("Asia/Seoul")).strftime(
+                    "%Y년 %m월 %d일 %H:%M"
                 )
+                with st.container(border=True):
+                    st.markdown(f"**{decision}**")
+                    st.text(
+                        f"{date} · {PROFILES.get(event.actor_id, '사용자')} · 버전 {event.version}"
+                    )
+                    st.text(event.reason or "처리 의견 없음")
 
 
 def action_panel(service, context, state, detail):
@@ -471,25 +494,40 @@ def detail_body(service, context, state, detail, phase):
             state["phase"] = 1
             st.rerun()
         candidates_screen(service, context, state, detail)
-        if "review" in detail.allowed_actions:
-            if st.button(
-                "검토하고 문서 만들기 →", disabled=r.selected_evidence_id is None, type="primary"
-            ):
-                with st.spinner("규정 검토 및 문서 생성 중…"):
-                    review = result_data(service.review_request(context, ref_of(r)))
-                    if review and result_data(
-                        service.generate_documents(
-                            context,
-                            RequestRef(request_id=review.request_id, version=review.version),
-                        )
-                    ):
-                        clear_confirmations(state)
-                        state["phase"] = 3
-                        st.rerun()
-        elif editable:
-            st.info(
-                "제출 이후 상품을 바꾸려면 다른 상품을 선택하거나 구매 조건을 수정해 새 버전을 만들어 주세요."
+        with st.container(key="selection_footer"):
+            selected = next(
+                (e for e in detail.candidates if e.evidence_id == r.selected_evidence_id), None
             )
+            if selected:
+                fee = shipping_total(selected.supplement, r.inputs.quantity)
+                total = (
+                    None if fee is None else selected.product.productPrice * r.inputs.quantity + fee
+                )
+                st.text(f"선택 상품: {selected.product.productName}")
+                st.markdown(f"**{r.inputs.quantity}대 · 배송비 포함 {money(total)}**")
+            else:
+                st.info("아직 선택한 상품이 없습니다. 위 목록에서 상품을 선택하세요.")
+            if "review" in detail.allowed_actions:
+                if st.button(
+                    "검토하고 문서 만들기 →",
+                    disabled=r.selected_evidence_id is None,
+                    type="primary",
+                ):
+                    with st.spinner("규정 검토 및 문서 생성 중…"):
+                        review = result_data(service.review_request(context, ref_of(r)))
+                        if review and result_data(
+                            service.generate_documents(
+                                context,
+                                RequestRef(request_id=review.request_id, version=review.version),
+                            )
+                        ):
+                            clear_confirmations(state)
+                            state["phase"] = 3
+                            st.rerun()
+            elif editable:
+                st.info(
+                    "제출 이후 상품을 바꾸려면 다른 상품을 선택하거나 구매 조건을 수정해 새 버전을 만들어 주세요."
+                )
         return
     selected = next((e for e in detail.candidates if e.evidence_id == r.selected_evidence_id), None)
     if selected:
@@ -501,14 +539,6 @@ def detail_body(service, context, state, detail, phase):
     metrics[2].metric(
         "남은 예산", money(r.inputs.budget_krw - total if total is not None else None)
     )
-    if detail.review:
-        for reason in detail.blocked_reasons:
-            st.warning(reason)
-        if detail.review.missing_fields:
-            fields = dict(purpose="구매 목적", selected_product="선택 상품", shipping="배송비 근거")
-            st.warning(
-                "보완 항목: " + ", ".join(fields.get(f, f) for f in detail.review.missing_fields)
-            )
     if detail.history and r.status in ("needs_revision", "rejected"):
         st.markdown("**담당자 처리 의견**")
         st.text(detail.history[-1].reason or "의견 없음")
@@ -517,6 +547,27 @@ def detail_body(service, context, state, detail, phase):
     else:
         st.info("문서가 없습니다. 상품 선택 단계에서 문서를 만들어 주세요.")
     with st.container(key="action_footer"):
+        if detail.review and editable:
+            if detail.review.can_submit:
+                st.success("제출할 준비가 되었습니다. 문서를 확인한 뒤 구매팀에 제출하세요.")
+            else:
+                labels = {
+                    "purpose": "구매 목적",
+                    "selected_product": "선택 상품",
+                    "shipping": "배송비 근거",
+                }
+                if detail.review.missing_fields:
+                    st.error(
+                        "제출 전 보완이 필요합니다: "
+                        + ", ".join(labels.get(f, f) for f in detail.review.missing_fields)
+                    )
+                for check in detail.review.checks:
+                    if check.result != "pass":
+                        st.warning(check.reason)
+        if r.status == "submitted":
+            st.success(
+                "구매팀에 검토를 요청했습니다. 처리 상태는 내 구매요청에서 확인할 수 있습니다."
+            )
         if editable:
             back, edit = st.columns(2)
             if back.button("← 상품 선택"):
@@ -637,7 +688,9 @@ def main(service=None):
                 state.update(folder=folder, page=1)
                 move(state, "list")
     if state.get("notice"):
-        st.success(state.pop("notice"))
+        notice = state.pop("notice")
+        st.success(notice)
+        st.toast(notice, icon="✅")
     if state["view"] == "create":
         create_screen(service, context, state)
     elif state["view"] == "detail":

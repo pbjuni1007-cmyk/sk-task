@@ -113,7 +113,7 @@ def test_missing_purpose_document_tabs_and_disabled_submit(tmp_path):
     assert [t.label for t in at.tabs] == ["구매요청서", "상품 비교표", "규정 검토"]
     assert next(b for b in at.button if b.label == "구매팀에 제출").disabled
     assert len(at.get("download_button")) == 3
-    assert any("구매 목적" in w.value for w in at.warning)
+    assert any("구매 목적" in w.value for w in at.error)
     assert service.get_request(owner, r).data.request.submitted_at is None
 
 
@@ -140,17 +140,24 @@ def test_explicit_confirmation_cancel_role_change_and_high_approval(tmp_path):
     rerun(at)
     click(at, "열기")
     click(at, "반려")
-    assert next(b for b in at.button if b.label == "확인하여 처리").disabled
+    assert at.button(key="confirm_decision").disabled
+    assert at.button(key="confirm_decision").label == "반려"
+    assert (
+        next(t for t in at.text_area if t.label == "처리 의견").proto.placeholder
+        == "승인 / 보완 / 반려 사유를 입력해주세요"
+    )
     click(at, "처리 취소")
     click(at, "승인")
     assert any("추가 승인자" in i.value for i in at.info)
-    click(at, "확인하여 처리")
+    at.button(key="confirm_decision").click()
+    rerun(at)
     assert service.get_request(owner, r).data.request.status == "additional_approval"
     at.selectbox(key="profile").select("manager_a")
     rerun(at)
     click(at, "열기")
     click(at, "승인")
-    click(at, "확인하여 처리")
+    at.button(key="confirm_decision").click()
+    rerun(at)
     assert service.get_request(owner, r).data.request.status == "approved"
 
 
@@ -291,12 +298,13 @@ def test_revision_reason_and_requester_resume(tmp_path):
     click(at, "열기")
     assert not any(t.label == "AI 요청" for t in at.text_area)
     click(at, "보완 요청")
-    assert next(b for b in at.button if b.label == "확인하여 처리").disabled
+    assert at.button(key="confirm_decision").disabled
     next(t for t in at.text_area if t.label == "처리 의견").input(
         "사용 부서를 구체적으로 적어 주세요"
     )
     rerun(at)
-    click(at, "확인하여 처리")
+    at.button(key="confirm_decision").click()
+    rerun(at)
     at.selectbox(key="profile").select("employee_a")
     rerun(at)
     click(at, "열기")
@@ -528,3 +536,16 @@ def test_recent_requests_and_user_text_are_displayed_safely(tmp_path):
     # Dynamic text must never be interpolated into trusted HTML without escaping.
     assert not any("<img src=x" in m.value for m in at.markdown)
     assert any(purpose == c.value for c in at.text)
+
+
+def test_document_rendering_and_korean_approval_history(tmp_path):
+    service = service_with_products(tmp_path)
+    r, owner = seed(service)
+    d = service.get_request(owner, r).data
+    service.submit_request(owner, service.prepare_submission(owner, r, d.documents.bundle_id).data)
+    at = run_app(service)
+    click(at, "열기")
+    assert any(m.value.startswith("# 구매요청서") for m in at.markdown)
+    assert any("구매요청 제출" in m.value for m in at.markdown)
+    assert any("박직원 · 개발팀" in t.value and "버전" in t.value for t in at.text)
+    assert not any("employee_a · submit" in t.value for t in at.text)
