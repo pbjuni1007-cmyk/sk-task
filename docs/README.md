@@ -1,5 +1,7 @@
 # SK-TASK 문서 목차
 
+**제출용 최종 설계서:** [7반 6조 SK-TASK](submission/7반_6조_SK-TASK.md). `AGENT_DESIGN.md`는 별도의 구현 요약 문서다.
+
 회사 상황을 담은 DB 구성과 전환 실행법은 [시연용 DB 안내](guides/DEMO_DATABASE.md)를 참고한다.
 
 처음 실행하려면 [프로젝트 README](../README.md), 발표하려면 [화면 시연 가이드](guides/DEMO_GUIDE.md), 코드를 수정하려면 [개발 안내](guides/DEVELOPMENT.md)부터 읽는다.
@@ -9,7 +11,9 @@
 ```text
 docs/
 ├── README.md                         # 문서 진입점·최신 검증 상태
-├── AGENT_DESIGN.md                   # 제출용 설계서
+├── AGENT_DESIGN.md                   # 구현 요약 설계서
+├── submission/
+│   └── 7반_6조_SK-TASK.md             # 제출용 최종 설계서
 ├── guides/
 │   ├── DEMO_DATABASE.md              # 회사 시연 DB 생성·전환 실행
 │   ├── DEMO_GUIDE.md                 # 실제 화면 시연 순서
@@ -31,7 +35,7 @@ docs/
 | 발표 화면을 그대로 따라가기          | [실제 화면 시연 순서](guides/DEMO_GUIDE.md)              |
 | 개발 환경·린트·포맷·테스트           | [개발 안내](guides/DEVELOPMENT.md)                       |
 | Agent 구조 이해                      | [코드 흐름 안내](guides/AGENT_FLOW.md)                   |
-| 제출 양식과 설계 판단 확인           | [Agent 설계서](AGENT_DESIGN.md)                          |
+| 제출 양식과 설계 판단 확인           | [제출용 설계서](submission/7반_6조_SK-TASK.md)           |
 | API 요청·응답 계약 확인              | [쿠팡 API 대조](reference/COUPANG_API_CONTRACT_CHECK.md) |
 | 상품 근거 확인                       | [상품 자료](reference/COUPANG_FIXTURES.md)               |
 | 설계 테스트의 근거 찾기              | [테스트 추적표](validation/TEST_TRACEABILITY.md)         |
