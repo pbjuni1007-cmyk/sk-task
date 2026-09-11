@@ -1,6 +1,6 @@
 # 쿠팡 모의 API 상품 자료
 
-2026-09-10 사용자 제공 정보로 실제 상품2개를 구성했다. [evidence.json](../fixtures/coupang/evidence.json)은 앱이 읽는 검증된 내부 모델이고, [user-provided-products.json](../fixtures/coupang/user-provided-products.json)은 판매자와 사용자 확인 출처를 포함한 원본 기록이다.
+2026-09-10 사용자 제공 정보로 실제 상품2개를 구성했다. [evidence.json](../../fixtures/coupang/evidence.json)은 앱이 읽는 검증된 내부 모델이고, [user-provided-products.json](../../fixtures/coupang/user-provided-products.json)은 판매자와 사용자 확인 출처를 포함한 원본 기록이다.
 
 | 상품            | 일반 구매 가격 | 판매자       | 배송            |
 | --------------- | -------------: | ------------ | --------------- |

@@ -14,7 +14,7 @@ python3.12 -m venv .venv
 .venv/bin/python -m streamlit run app.py --server.address 127.0.0.1 --server.port 8501 --browser.gatherUsageStats false
 ```
 
-http://127.0.0.1:8501/ 에서 구매 조건 → 상품 비교·선택 → 문서 확인·제출 순서로 사용한다. 상세한 입력 예시는 [시연 가이드](docs/DEMO_GUIDE.md)를 참고한다.
+http://127.0.0.1:8501/ 에서 구매 조건 → 상품 비교·선택 → 문서 확인·제출 순서로 사용한다. 상세한 입력 예시는 [시연 가이드](docs/guides/DEMO_GUIDE.md)를 참고한다.
 
 프로젝트 `.env`에 `OPENAI_API_KEY`를 설정한다. 선택적으로 `OPENAI_API_KEY_SUB`를 넣으면 기본 키401/403/429 오류 시 보조 키로 전환한다. 전환 후 같은 Agent 세션은 보조 키를 사용하며 실패 시도도 모델6회 예산에 포함한다. 키는 로그·화면에 출력하지 않는다. 모델은 `PURCHASE_MODEL`로 지정하며 기본값은 gpt-4o-mini다.
 
@@ -32,26 +32,18 @@ http://127.0.0.1:8501/ 에서 구매 조건 → 상품 비교·선택 → 문서
 
 소스: purchase_agent/{agent,tools,middleware,model,preferences,memory}.py는 Agent 계층, workflow/storage/policy/documents는 업무 계층, ui/app.py는 화면 계층이다. 공통 계약은 schemas.py와 services.py다.
 
-## 검증 · 2026-09-10
+## 검증
 
-```sh
-.venv/bin/python -m pytest -q
-.venv/bin/python -m pip check
-.venv/bin/python scripts/check_catalog.py --strict
-```
+최신 자동 검사 결과는 [문서 목차의 검증 상태](docs/README.md#현재-검증-상태)를 확인한다. 검사 실행법은 [개발 안내](docs/guides/DEVELOPMENT.md)에 모았다.
 
-전체114개 오프라인 테스트 통과. socket 접속을 차단한 테스트이며 실제 모델 품질과 구분한다. 의존성 충돌 없음, 사용자 확인 상품2개 검사 통과.
-
-사용자 확인 상품 + 실제 gpt-4o-mini 정상10/10 검증에 더해, 2026-09-10 Chrome에서 새 Agent·독립 DB로 문서 생성20회를 다시 실행해20/20 성공했다. Agent 처리 시간 p50 6.602초 / p95 7.197초, 최대8.402초다. [브라우저 검증 보고서](docs/BROWSER_QA_REPORT.md)와 [측정 원본](docs/evidence/evaluation-browser-latency.json)에 실행 방식·범위·관찰 결과를 기록했다. 38개 설계 시나리오는 일반 화면14개·주입 화면20개·QA 콘솔4개로 구분했다. 브라우저 다운로드 저장 완료는 도구 보안 정책으로 미확인이다.
-
-기본 키429 모의 오류→실제 보조 키 응답도 확인했다. 실제 구매/승인 운영 시스템에 연결하지 않았으며 UI 역할은 시연용 프로필이다.
+실제 모델·브라우저 실험은 [날짜별 검증 보고서](docs/validation/BROWSER_QA_REPORT.md)에 보관한다. 해당 기록은 현재 코드 전체를 다시 브라우저 검증했다는 뜻이 아니다. 실제 쿠팡 API 호출과 운영 결재 시스템 연결은 실습 범위에 포함하지 않는다.
 
 ## 범위와 출처
 
-- [상품 자료](docs/COUPANG_FIXTURES.md): 클라인즈114000원 / LG169000원, 무료·로켓배송은 사용자가 확인한 당시 정보다. 실시간 가격 보장이 아니다.
+- [상품 자료](docs/reference/COUPANG_FIXTURES.md): 클라인즈114000원 / LG169000원, 무료·로켓배송은 사용자가 확인한 당시 정보다. 실시간 가격 보장이 아니다.
 - API 요청/응답 예제: fixtures/coupang/search-request.json, search-response.json. 내부 배송/출처 메타데이터는 evidence.json으로 분리했다.
-- [공식 API 본문 대조](docs/COUPANG_API_CONTRACT_CHECK.md): 2026-09-10 브라우저에서 v1 검색 API 요청·응답 필드, 최대10개·분당50회를 확인했다. 실제 쿠팡 API 인증·호출 검증은 수행하지 않았다.
-- [38개 설계 기준 추적표](docs/TEST_TRACEABILITY.md), [Agent 설계서](docs/AGENT_DESIGN.md).
+- [공식 API 본문 대조](docs/reference/COUPANG_API_CONTRACT_CHECK.md): 2026-09-10 브라우저에서 v1 검색 API 요청·응답 필드, 최대10개·분당50회를 확인했다. 실제 쿠팡 API 인증·호출 검증은 수행하지 않았다.
+- [38개 설계 기준 추적표](docs/validation/TEST_TRACEABILITY.md), [Agent 설계서](docs/AGENT_DESIGN.md).
 
 DB는 runtime/purchase.sqlite3. .env/runtime/.venv는 Git 제외 대상이다. macOS ARM64 이외 환경, 운영 인증 및 해상도별 시각 검증은 별도 범위다.
 
@@ -59,4 +51,4 @@ DB는 runtime/purchase.sqlite3. .env/runtime/.venv는 Git 제외 대상이다. m
 
 ## 코드 읽기와 개발
 
-[Agent 흐름 안내](docs/AGENT_FLOW.md) 순서로 코드를 읽을 수 있다. 린트·포맷 설정과 `make check` 실행 방법은 [개발 도구 안내](docs/DEVELOPMENT.md)를 참고한다.
+[Agent 흐름 안내](docs/guides/AGENT_FLOW.md) 순서로 코드를 읽을 수 있다. 린트·포맷 설정과 `make check` 실행 방법은 [개발 도구 안내](docs/guides/DEVELOPMENT.md)를 참고한다.

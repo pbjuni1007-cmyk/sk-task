@@ -1,5 +1,7 @@
 # SK-TASK 브라우저 검증 보고서
 
+> 과거 실행 기록이다. 이후 PR 수정 및 현재 자동 검사 결과는 [문서 목차](../README.md#현재-검증-상태)를 확인한다. 이 보고서의 관찰 결과와 원본 자료는 당시 기준으로 보존한다.
+
 검증일: 2026-09-10 · 도구: Chrome / CUA 브라우저 조작 · 기준: 설계 테스트 38개.
 
 **38개 시나리오를 아래 방식으로 실행·대조했다. 업무 흐름을 막는 미해결 오류는 발견하지 않았고, LG 판매자 오표기 1건을 수정했다.** 모든 항목이 실제 외부 API 호출이나 일반 화면만으로 검증됐다는 뜻은 아니다. 다운로드 저장 완료는 별도 미확인이다.
@@ -93,8 +95,8 @@ LG 상품 페이지의 판매자 정보는 **쿠팡**, 제조사는 **LG전자**
 
 ## 증거와 재현
 
-- [관찰 DOM 원문](evidence/browser-dom-snapshots.json): 보관한 화면 스냅샷. 초기 정상 승인 흐름의 일부는 작업의 브라우저 도구 기록에만 있다.
-- [38개 시나리오 구조화 기록](evidence/browser-qa-matrix.json)
-- [20회 실제 모델 결과와 저장 문서 대조](evidence/evaluation-browser-latency.json)
-- [공식 API 계약 대조](COUPANG_API_CONTRACT_CHECK.md)
+- [관찰 DOM 원문](../evidence/browser-dom-snapshots.json): 보관한 화면 스냅샷. 초기 정상 승인 흐름의 일부는 작업의 브라우저 도구 기록에만 있다.
+- [38개 시나리오 구조화 기록](../evidence/browser-qa-matrix.json)
+- [20회 실제 모델 결과와 저장 문서 대조](../evidence/evaluation-browser-latency.json)
+- [공식 API 계약 대조](../reference/COUPANG_API_CONTRACT_CHECK.md)
 - `runtime/browser-qa/`: 격리 DB, 테스트용 주입 스크립트, 관찰 로그. 이 디렉터리는 Git에서 제외한다.

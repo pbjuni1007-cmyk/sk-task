@@ -21,13 +21,13 @@ flowchart TD
 
 ## 읽는 순서
 
-1. [agent.py](../purchase_agent/agent.py)의 `AgentSession._build_graph`: 모델, 도구, 구조화 응답, 미들웨어와 메모리를 조립한다.
-2. [tools.py](../purchase_agent/tools.py)의 `build_tools`: 조건 저장 → 검색 → 선택 → 검토 → 문서 → 제출의 접점을 본다. 선택은 `upsert_purchase_request`를 다시 호출한다. 조회·선호 저장 도구는 보조 역할이다.
-3. [middleware.py](../purchase_agent/middleware.py)의 `WorkflowToolsMiddleware`: 매 모델 호출마다 노출 도구를 제한한다. `BudgetModel`과 `ToolBudgetMiddleware`는 호출 횟수와 시간을 제한한다.
-4. [schemas.py](../purchase_agent/schemas.py): 요청, 상품 근거, 검토, 문서와 응답 형식을 찾아본다.
-5. [workflow.py](../purchase_agent/workflow.py)의 `LocalPurchaseService`: UI와 AI가 공유하는 실제 업무 처리다. 조건·후보 변경 시 새 버전을 만들고, 변경 없는 재검토는 문서를 보존한다.
-6. [policy.py](../purchase_agent/policy.py), [documents.py](../purchase_agent/documents.py): 배송비 포함 금액과 승인 조건을 계산하고 문서 3종을 생성한다.
-7. [ui/chat.py](../purchase_agent/ui/chat.py) → `AgentSession.invoke` → `_run` → `_validate` 또는 `resume` 순서로 화면과 실행을 연결한다.
+1. [agent.py](../../purchase_agent/agent.py)의 `AgentSession._build_graph`: 모델, 도구, 구조화 응답, 미들웨어와 메모리를 조립한다.
+2. [tools.py](../../purchase_agent/tools.py)의 `build_tools`: 조건 저장 → 검색 → 선택 → 검토 → 문서 → 제출의 접점을 본다. 선택은 `upsert_purchase_request`를 다시 호출한다. 조회·선호 저장 도구는 보조 역할이다.
+3. [middleware.py](../../purchase_agent/middleware.py)의 `WorkflowToolsMiddleware`: 매 모델 호출마다 노출 도구를 제한한다. `BudgetModel`과 `ToolBudgetMiddleware`는 호출 횟수와 시간을 제한한다.
+4. [schemas.py](../../purchase_agent/schemas.py): 요청, 상품 근거, 검토, 문서와 응답 형식을 찾아본다.
+5. [workflow.py](../../purchase_agent/workflow.py)의 `LocalPurchaseService`: UI와 AI가 공유하는 실제 업무 처리다. 조건·후보 변경 시 새 버전을 만들고, 변경 없는 재검토는 문서를 보존한다.
+6. [policy.py](../../purchase_agent/policy.py), [documents.py](../../purchase_agent/documents.py): 배송비 포함 금액과 승인 조건을 계산하고 문서 3종을 생성한다.
+7. [ui/chat.py](../../purchase_agent/ui/chat.py) → `AgentSession.invoke` → `_run` → `_validate` 또는 `resume` 순서로 화면과 실행을 연결한다.
 
 ## 한 사례 따라가기
 

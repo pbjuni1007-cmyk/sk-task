@@ -2,6 +2,8 @@
 
 Python 코드는 Ruff로 린트와 포맷을 검사한다. Markdown·JSON·YAML 등은 Prettier로 정리한다. Node.js는 문서 포맷 도구에만 필요하며 앱 실행에는 사용하지 않는다.
 
+Agent 구조를 처음 읽는다면 [코드 흐름 안내](AGENT_FLOW.md)를 먼저 본다.
+
 ## 설치
 
 저장소 루트에서 Python 3.12와 Node.js 24 환경을 사용한다.
@@ -42,3 +44,15 @@ Ruff의 자동 수정 후에는 테스트를 실행한다. pytest가 import로 �
 - 현재 별도의 타입 검사기는 설정하지 않는다. Ruff 검사 통과를 타입 검사 통과로 해석하지 않는다.
 
 설정 근거: [Ruff 공식 설정 문서](https://docs.astral.sh/ruff/configuration/), [Prettier 공식 설치 안내](https://prettier.io/docs/install).
+
+## 실제 모델 평가
+
+아래 명령은 실제 모델을 호출하므로 비용이 발생한다. 일반 `make check`와 별개이며 결과는 실행 당시 환경과 입력 기준으로 해석한다.
+
+```sh
+.venv/bin/python scripts/evaluate_dialogues.py
+.venv/bin/python scripts/evaluate.py --suite acceptance --runs 10 --catalog user-confirmed
+.venv/bin/python scripts/evaluate.py --suite latency --runs 20 --catalog user-confirmed
+```
+
+과거 실행 결과는 [브라우저 검증 보고서](../validation/BROWSER_QA_REPORT.md)와 [원본 자료](../evidence/)에서 확인한다.
