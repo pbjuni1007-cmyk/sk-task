@@ -1,5 +1,7 @@
 # SK-TASK
 
+회사 상황을 담은 DB 구성과 전환 실행법은 [시연용 DB 안내](docs/guides/DEMO_DATABASE.md)를 참고한다.
+
 Task Automation for Supplier Knowledge
 
 사내 모니터 구매요청의 상품 비교, 배송비 포함 예산 검토, 문서3종 작성과 직원 제출·담당자 결재를 지원한다. 실제 OpenAI 모델을 사용하며 쿠팡 검색은 사용자 확인 상품12개로 만든 모의 API다. 실제 주문·결제는 하지 않는다.

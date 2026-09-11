@@ -16,14 +16,12 @@ def panel(service, context, state, detail=None):
         sync_version(chat, detail.request.version)
     with st.container(key="ai_panel"):
         st.subheader("SK-TASK AI 도우미")
-        st.caption("현재 요청의 조건을 정리하고 상품 비교와 문서 작성을 도와드립니다.")
         session = chat.get("agent")
         if session and getattr(session, "department_budget", None):
             budget = session.department_budget
             st.info(
                 f"{budget['department_name']} 예산 · 잔액 {budget['remaining_krw']:,}원 · 건별 한도 {budget['per_request_limit_krw']:,}원"
             )
-            st.caption("고정된 모의 예산이며 실제 회계 잔액·지출 예약과 연결되지 않습니다.")
         history = st.container(height=300, key="ai_history", autoscroll=True)
         with history:
             for role, text in chat.get("history", []):

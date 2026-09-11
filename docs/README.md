@@ -1,5 +1,7 @@
 # SK-TASK 문서 목차
 
+회사 상황을 담은 DB 구성과 전환 실행법은 [시연용 DB 안내](guides/DEMO_DATABASE.md)를 참고한다.
+
 처음 실행하려면 [프로젝트 README](../README.md), 발표하려면 [화면 시연 가이드](guides/DEMO_GUIDE.md), 코드를 수정하려면 [개발 안내](guides/DEVELOPMENT.md)부터 읽는다.
 
 ## 문서 트리
@@ -9,6 +11,7 @@ docs/
 ├── README.md                         # 문서 진입점·최신 검증 상태
 ├── AGENT_DESIGN.md                   # 제출용 설계서
 ├── guides/
+│   ├── DEMO_DATABASE.md              # 회사 시연 DB 생성·전환 실행
 │   ├── DEMO_GUIDE.md                 # 실제 화면 시연 순서
 │   ├── DEVELOPMENT.md                # 개발·검사·모델 평가 명령
 │   └── AGENT_FLOW.md                 # Agent 호출 흐름·가드레일 모듈

@@ -39,11 +39,17 @@
   font-size: 14px;
   font-weight: 650;
 }
-.status-ready,
+
 .status-approved {
-  color: #24634b;
-  background: #e6f2ec;
+  color: #243463;
+  background: #a6d8fe;
 }
+
+.status-ready {
+  color: #2b5f42;
+  background: #a6fec6;
+}
+
 .status-submitted,
 .status-additional_approval {
   color: #2c5780;

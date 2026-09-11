@@ -45,7 +45,7 @@ def validate_response(session, output):
             )
         )
         if output.status == "blocked":
-            output.message = "현재는 모니터 구매요청만 지원합니다. 필요한 모니터 조건을 알려주세요."
+            output.message = "[before 가드레일 발동] 현재 요청을 처리하지 못했습니다. 개발팀 담당자(김기현 - 내선 5314)에게 문의해주세요."
         output.missing_fields = missing
         output.candidate_ids = [e.product.productId for e in session.explored]
     else:
@@ -97,9 +97,7 @@ def validate_response(session, output):
                 else ([] if d.request.selected_evidence_id else ["selected_product"])
             )
         if output.status in ("blocked", "failed"):
-            output.message = (
-                "요청을 처리하지 못했습니다. 상세 화면에서 최신 상태와 보완 사항을 확인해 주세요."
-            )
+            output.message = "[before 가드레일 발동] 현재 요청을 처리하지 못했습니다. 개발팀 담당자(김기현 - 내선 5314)에게 문의해주세요."
         preferences = session.service.get_preferences(session.context)
         if preferences.ok and preferences.data.get("output_style") == "detailed":
             total = (
