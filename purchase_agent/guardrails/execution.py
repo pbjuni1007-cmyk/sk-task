@@ -38,7 +38,7 @@ class CallBudget:
 
     def model_call(self):
         self.check()
-        if self.models >= 6:
+        if self.models >= 15:
             raise BudgetExceeded("MODEL_LIMIT")
         self.models += 1
 
