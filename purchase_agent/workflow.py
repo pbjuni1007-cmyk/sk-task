@@ -170,7 +170,9 @@ class LocalPurchaseService:
         if d.request.status in ('submitted','additional_approval','approved','rejected','needs_revision'):
             if d.review:return d.review
             raise BusinessError('FROZEN_VERSION')
-        if d.review and d.review.policy_version!=policy.POLICY_VERSION:
+        if d.review:
+            if d.review.policy_version == policy.POLICY_VERSION:
+                return d.review
             d=self._new_version(db,d,d.request.inputs,d.request.selected_evidence_id,d.candidates)
         d.review=policy.review(d.request,d.candidates);d.documents=None;d.request.status='draft'
         self._save(db,d);return d.review

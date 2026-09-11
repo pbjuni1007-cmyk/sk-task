@@ -146,12 +146,32 @@ def test_document_tamper_blocks_submit(service):
         d=service._get(db,OWNER,r);d.documents.files['review']='tampered';service._save(db,d)
     assert service.submit_request(OWNER,c).error_code=='DOCUMENT_MISMATCH'
 
+def test_repeat_review_preserves_ready_documents(service):
+    r,review,docs=ready(service)
+    before=service.get_request(OWNER,r).data
+
+    repeated=service.review_request(OWNER,r)
+
+    assert repeated.ok and repeated.data==review
+    after=service.get_request(OWNER,r).data
+    assert after.request.status=='ready'
+    assert after.request.version==before.request.version
+    assert after.documents==before.documents==docs
+    assert after.documents.bundle_id==docs.bundle_id
+    assert after.documents.bundle_hash==docs.bundle_hash
+
 def test_policy_change_creates_version(service,monkeypatch):
     r,_,docs=ready(service)
     monkeypatch.setattr('purchase_agent.policy.POLICY_VERSION','purchase-v3-test')
     new_review=service.review_request(OWNER,r).data
     assert new_review.version==r.version+1
-    assert service.get_request(OWNER,r).data.documents==docs
+    old=service.get_request(OWNER,r).data
+    assert old.request.version==r.version and old.request.status=='ready'
+    assert old.documents==docs
+    new=service.get_latest_request(OWNER,r.request_id).data
+    assert new.request.version==r.version+1 and new.request.status=='draft'
+    assert new.review==new_review and new.review.policy_version=='purchase-v3-test'
+    assert new.documents is None
 
 def test_revision_must_not_overwrite_submitted_documents(service):
     r,_,docs=ready(service);submit(service,r,docs)
